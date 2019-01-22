@@ -10,9 +10,9 @@ class Widgets(object):
     slider_float_steps = 60
 
     @classmethod
-    def choose_widget(cls, name, x):
+    def get_widget(cls, name, x):
         if isinstance(x, Component):
-            return x
+            return cls.component_widget(name, x)
         elif isinstance(x, bool):
             return cls.boolean_widget(name, x)
 
@@ -28,6 +28,14 @@ class Widgets(object):
             return cls.iterable_widget(name, x)
         else:
             return None
+
+    @staticmethod
+    def component_widget(name, x):
+        if getattr(x, "id", None) is None:
+            x.id = name
+        elif x.id != name:
+            raise ValueError("Component id must match keyword name or be empty.")
+        return x
 
     @staticmethod
     def boolean_widget(name, x):
