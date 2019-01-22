@@ -3,14 +3,29 @@ import dash_html_components as html
 from dash.development.base_component import Component
 from numbers import Real, Integral
 from collections import Iterable, Mapping
+from abc import ABC, abstractmethod
 
 
-class Widgets(object):
+class DasherBaseWidgets(ABC):
+    @classmethod
+    @abstractmethod
+    def create_widget(cls, name, x):
+        pass
+
+
+class DasherWidgets(DasherBaseWidgets):
     slider_max_marks = 15
     slider_float_steps = 60
 
     @classmethod
-    def get_widget(cls, name, x):
+    def create_widget(cls, name, x):
+        widget = cls._create_widget(name, x)
+        if widget is not None:
+            widget = html.Div([html.Label(name), widget], id=name + "_div")
+        return widget
+
+    @classmethod
+    def _create_widget(cls, name, x):
         if isinstance(x, Component):
             return cls.component_widget(name, x)
         elif isinstance(x, bool):
@@ -50,8 +65,7 @@ class Widgets(object):
 
     @staticmethod
     def string_widget(name, x):
-        input_widget = dcc.Input(id=name, type="text", value=x)
-        return html.Div(id=name + "_div", children=[input_widget])
+        return dcc.Input(id=name, type="text", value=x)
 
     @staticmethod
     def iterable_widget(name, x):
