@@ -1,28 +1,24 @@
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.development.base_component import Component
+from dasher.base import DasherWidget, DasherBaseWidgetFactory
 from numbers import Real, Integral
 from collections import Iterable, Mapping
-from abc import ABC, abstractmethod
 
 
-class DasherBaseWidgets(ABC):
-    @classmethod
-    @abstractmethod
-    def create_widget(cls, name, x):
-        pass
-
-
-class DasherWidgets(DasherBaseWidgets):
+class DasherWidgetFactory(DasherBaseWidgetFactory):
     slider_max_marks = 15
     slider_float_steps = 60
 
     @classmethod
-    def create_widget(cls, name, x):
+    def create_widget(cls, name, label, x):
         widget = cls._create_widget(name, x)
         if widget is not None:
-            widget = html.Div([html.Label(name), widget], id=name + "_div")
-        return widget
+            dash_component = html.Div([html.Label(label), widget], id=name + "_div")
+            dasher_widget = DasherWidget(name, label, dash_component)
+            return dasher_widget
+        else:
+            return None
 
     @classmethod
     def _create_widget(cls, name, x):
@@ -48,8 +44,8 @@ class DasherWidgets(DasherBaseWidgets):
     def component_widget(name, x):
         if getattr(x, "id", None) is None:
             x.id = name
-        elif x.id != name:
-            raise ValueError("Component id must match keyword name or be empty.")
+        else:
+            raise ValueError("Component id must be empty.")
         return x
 
     @staticmethod

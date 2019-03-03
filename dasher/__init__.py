@@ -1,35 +1,51 @@
 import dash
-from dasher.widgets import DasherWidgets, DasherBaseWidgets
-from dasher.templates import DasherSimpleTemplate, DasherBaseTemplate
+from dasher.base import DasherBaseTemplate, DasherBaseWidgetFactory, DasherCallback
+from dasher.widgets import DasherWidgetFactory
+from dasher.templates import DasherSimpleTemplate
 
 
 class Dasher(object):
     def __init__(
-        self, name, template=DasherSimpleTemplate, widget_factory=DasherWidgets, **kw
+        self,
+        name,
+        template=DasherSimpleTemplate,
+        widget_factory=DasherWidgetFactory,
+        **kw
     ):
         self.app = dash.Dash(name, **kw)
         if not issubclass(template, DasherBaseTemplate):
             raise ValueError("template must be a subclass of DasherBaseTemplate")
         self.template = template
-        if not issubclass(widget_factory, DasherBaseWidgets):
-            raise ValueError("widgets must be a subclass of DasherBaseWidgets")
+        if not issubclass(widget_factory, DasherBaseWidgetFactory):
+            raise ValueError("widgets must be a subclass of DasherBaseWidgetFactory")
         self.widget_factory = widget_factory
+        self.callback_list = []
 
-    def generate_widgets(self, kw):
+    @staticmethod
+    def get_widget_name(key, id):
+        return "{}-{}".format(key, id)
+
+    def generate_widgets(self, id, kw):
         widget_list = []
-        for name, value in kw.items():
-            widget = self.widget_factory.create_widget(name, value)
+        for key, value in kw.items():
+            name = self.get_widget_name(key, id)
+            widget = self.widget_factory.create_widget(name, key, value)
             if widget is None:
-                raise ValueError("Cannot get a widget for keyword {}".format(name))
+                raise ValueError("Cannot generate a widget for keyword {}".format(key))
             widget_list.append(widget)
         return widget_list
 
     def callback(self, **kw):
         def function_wrapper(f):
-            widget_list = self.generate_widgets(kw)
-            self.app.layout = self.template.generate_layout(widget_list)
-            output, input_list = self.template.generate_connections(kw)
+            id = len(self.callback_list)
+            new_callback = DasherCallback(id, kw, self.generate_widgets(id, kw))
+            self.callback_list.append(new_callback)
+            self.app.layout = self.template.update_layout(
+                self.app.layout, self.callback_list
+            )
+            output, input_list = self.template.generate_connections(new_callback)
             return self.app.callback(output, input_list)(f)
+
         return function_wrapper
 
     def run_server(self, *args, **kw):
