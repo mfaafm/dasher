@@ -1,5 +1,4 @@
 import dash_core_components as dcc
-import dash_html_components as html
 from dash.development.base_component import Component
 from dasher.base import DasherWidget, DasherBaseWidgetFactory
 from numbers import Real, Integral
@@ -7,36 +6,33 @@ from collections import Iterable, Mapping
 
 
 class DasherWidgetFactory(DasherBaseWidgetFactory):
-    slider_max_marks = 15
-    slider_float_steps = 60
+    def __init__(self, slider_max_marks=8, slider_float_steps=60):
+        self.slider_max_marks = slider_max_marks
+        self.slider_float_steps = slider_float_steps
 
-    @classmethod
-    def create_widget(cls, name, label, x):
-        widget = cls._create_widget(name, x)
-        if widget is not None:
-            dash_component = html.Div([html.Label(label), widget], id=name + "_div")
-            dasher_widget = DasherWidget(name, label, dash_component)
-            return dasher_widget
+    def create_widget(self, name, label, x):
+        dash_component = self.create_dash_component(name, x)
+        if dash_component is not None:
+            return DasherWidget(name, label, dash_component)
         else:
             return None
 
-    @classmethod
-    def _create_widget(cls, name, x):
+    def create_dash_component(self, name, x):
         if isinstance(x, Component):
-            return cls.component_widget(name, x)
+            return self.component_widget(name, x)
         elif isinstance(x, bool):
-            return cls.boolean_widget(name, x)
+            return self.boolean_widget(name, x)
 
         elif isinstance(x, str):
-            return cls.string_widget(name, x)
+            return self.string_widget(name, x)
 
         if isinstance(x, (Real, Integral)):
             x = (x,)
 
         if isinstance(x, tuple):
-            return cls.tuple_widget(name, x)
+            return self.tuple_widget(name, x)
         elif isinstance(x, Iterable):
-            return cls.iterable_widget(name, x)
+            return self.iterable_widget(name, x)
         else:
             return None
 
@@ -75,34 +71,35 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
         else:
             return None
 
-    @classmethod
-    def tuple_widget(cls, name, x):
+    def tuple_widget(self, name, x):
         step = None
 
         if len(x) == 1:
-            minimum, maximum, value = cls._get_min_max_value(None, None, value=x[0])
+            minimum, maximum, value = self._get_min_max_value(None, None, value=x[0])
         elif len(x) == 2:
-            minimum, maximum, value = cls._get_min_max_value(x[0], x[1])
+            minimum, maximum, value = self._get_min_max_value(x[0], x[1])
         elif len(x) == 3:
             step = x[2]
             if step < 0:
                 raise ValueError("step must be >= 0")
-            minimum, maximum, value = cls._get_min_max_value(x[0], x[1], step=step)
+            minimum, maximum, value = self._get_min_max_value(x[0], x[1], step=step)
         else:
             raise ValueError("tuple must be (value, ), (min, max) or (min, max, step)")
 
         if all(isinstance(i, Integral) for i in x):
             if step is None:
                 step = 1
-            max_mark_step = (maximum - minimum) // cls.slider_max_marks
+            max_mark_step = (maximum - minimum) // self.slider_max_marks
             ticks = list(range(minimum, maximum + 1, max(step, max_mark_step)))
             marks = {i: str(i) for i in ticks}
         else:
             if step is None:
-                step = (maximum - minimum) / (cls.slider_float_steps - 1)
+                step = (maximum - minimum) / (self.slider_float_steps - 1)
 
-            ticks = list(minimum + step * i for i in range(0, int((maximum - minimum) / step)))
-            ticks = ticks[::max(1, len(ticks) // cls.slider_max_marks)] + [maximum]
+            ticks = list(
+                minimum + step * i for i in range(0, int((maximum - minimum) / step))
+            )
+            ticks = ticks[:: max(1, len(ticks) // self.slider_max_marks)] + [maximum]
             marks = {int(i) if i % 1 == 0 else i: "{:.3g}".format(i) for i in ticks}
 
         return dcc.Slider(

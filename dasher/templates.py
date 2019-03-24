@@ -1,46 +1,104 @@
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from dasher.base import DasherBaseTemplate
 
 
-class DasherSimpleTemplate(DasherBaseTemplate):
-    main_div_name = "dasher-main-div"
-    callback_div_base = "dasher-callback-div"
-    widget_div_base = "dasher-widget-div"
-    output_div_base = "dasher-output-div"
+class DasherStandardTemplate(DasherBaseTemplate):
+    navbar_id = "dasher-navbar"
+    tabs_id = "dasher-tabs"
+    body_id = "dasher-body"
+    main_name = "dasher-main"
+    tab_base = "dasher-tab"
+    output_base = "dasher-output"
+
+    def __init__(self, title="Dasher dashboard"):
+        self.__title = title
+        self.external_stylesheets = [dbc.themes.BOOTSTRAP]
+        self.navbar, self.body = self._create_base_layout()
+        self.tabs = None
+
+    @property
+    def title(self):
+        return self.__title
+
+    @title.setter
+    def title(self, title):
+        self.__title = title
+        self.navbar.brand = title
 
     @staticmethod
-    def _get_div_name(base, id):
-        return "{}-{}".format(base, id)
+    def _get_div_name(base, _id):
+        return "{}-{}".format(base, _id)
 
-    @classmethod
-    def update_layout(cls, layout, callback_list):
-        callback = callback_list[-1]
-        widget_div_name = cls._get_div_name(cls.widget_div_base, callback.id)
-        output_div_name = cls._get_div_name(cls.output_div_base, callback.id)
-        callback_div_name = cls._get_div_name(cls.callback_div_base, callback.id)
-        dash_widgets = [w.dash_component for w in callback.widget_list]
-        widget_div = html.Div(
-            dash_widgets, id=widget_div_name, style={"marginBottom": 50}
+    def _create_base_layout(self):
+        navbar = dbc.NavbarSimple(
+            brand=self.title,
+            dark=True,
+            color="primary",
+            sticky="top",
+            id=self.navbar_id,
         )
-        output_div = html.Div(id=output_div_name)
-        callback_div = html.Div([widget_div, output_div], id=callback_div_name)
+        body = dbc.Container([], id=self.body_id)
+        return navbar, body
 
-        if callback.id == 0:
-            main_div = html.Div([callback_div], id=cls.main_div_name)
-            return main_div
+    @staticmethod
+    def _create_form_group(widget):
+        return dbc.FormGroup(
+            [
+                dbc.Label(widget.label, html_for=widget.dash_component.id),
+                widget.dash_component,
+            ]
+        )
+
+    def _create_form(self, callback):
+        return dbc.Form([self._create_form_group(w) for w in callback.widget_list])
+
+    def _create_output(self, callback):
+        output_id = self._get_div_name(self.output_base, callback.id)
+        return html.Div(id=output_id)
+
+    def _create_card(self, callback):
+        form = self._create_form(callback)
+        output = self._create_output(callback)
+        card_header = dbc.CardHeader(callback.name)
+        card_body = dbc.CardBody([form, output])
+        card = dbc.Card([card_header, card_body])
+        if callback.description is not None:
+            card_title = dbc.CardTitle(callback.description)
+            card_body.children.insert(0, card_title)
+        return card
+
+    def _create_tab(self, callback, card):
+        tab_id = self._get_div_name(self.tab_base, callback.id)
+        return dbc.Tab(card, id=tab_id, label=callback.name)
+
+    def update_layout(self, layout, callback_list):
+        n_callbacks = len(callback_list)
+        callback = callback_list[-1]
+
+        if n_callbacks == 1:
+            card = self._create_card(callback)
+            self.body.children.extend([card])
+            return html.Div([self.navbar, self.body], id=self.main_name)
+        elif n_callbacks == 2:
+            tab_1 = self._create_tab(callback_list[-2], self.body.children)
+            tab_2 = self._create_tab(callback, self._create_card(callback))
+            self.tabs = dbc.Tabs([tab_1, tab_2], id=self.tabs_id)
+            self.body.children = self.tabs
+            return layout
         else:
-            layout.children.append(callback_div)
+            card = self._create_card(callback)
+            self.tabs.children.append(self._create_tab(callback, card))
             return layout
 
-    @classmethod
-    def generate_connections(cls, callback):
+    def generate_connections(self, callback):
         input_list = [
             Input(component_id=w.name, component_property="value")
             for w in callback.widget_list
         ]
         output = Output(
-            component_id=cls._get_div_name(cls.output_div_base, callback.id),
+            component_id=self._get_div_name(self.output_base, callback.id),
             component_property="children",
         )
         return output, input_list
