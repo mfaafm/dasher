@@ -12,11 +12,15 @@ class DasherStandardTemplate(DasherBaseTemplate):
     tab_base = "dasher-tab"
     output_base = "dasher-output"
 
-    def __init__(self, title="Dasher dashboard"):
+    def __init__(self, title="Dasher dashboard", widget_columns=2):
         self.__title = title
+        if widget_columns < 1:
+            raise ValueError("widget_columns must be >= 1")
+        self.widget_columns = widget_columns
+
         self.external_stylesheets = [dbc.themes.BOOTSTRAP]
-        self.navbar, self.body = self._create_base_layout()
         self.tabs = None
+        self.navbar, self.body = self._create_base_layout()
 
     @property
     def title(self):
@@ -32,13 +36,21 @@ class DasherStandardTemplate(DasherBaseTemplate):
         return "{}-{}".format(base, _id)
 
     def _create_base_layout(self):
+        credits = dbc.NavLink(
+            "created with dasher",
+            className="small",
+            href="http://github.com",
+            external_link=True,
+        )
         navbar = dbc.NavbarSimple(
+            credits,
             brand=self.title,
             dark=True,
             color="primary",
             sticky="top",
             id=self.navbar_id,
         )
+
         body = dbc.Container([], id=self.body_id)
         return navbar, body
 
@@ -51,8 +63,16 @@ class DasherStandardTemplate(DasherBaseTemplate):
             ]
         )
 
+    @staticmethod
+    def _chunks(l, n):
+        """Yield successive n-sized chunks from l."""
+        for i in range(0, len(l), n):
+            yield l[i : i + n]
+
     def _create_form(self, callback):
-        return dbc.Form([self._create_form_group(w) for w in callback.widget_list])
+        cols = [dbc.Col(self._create_form_group(w)) for w in callback.widget_list]
+        rows = [dbc.Row(row) for row in self._chunks(cols, self.widget_columns)]
+        return dbc.Form(rows)
 
     def _create_output(self, callback):
         output_id = self._get_div_name(self.output_base, callback.id)
@@ -61,9 +81,11 @@ class DasherStandardTemplate(DasherBaseTemplate):
     def _create_card(self, callback):
         form = self._create_form(callback)
         output = self._create_output(callback)
+
         card_header = dbc.CardHeader(callback.name)
         card_body = dbc.CardBody([form, output])
         card = dbc.Card([card_header, card_body])
+
         if callback.description is not None:
             card_title = dbc.CardTitle(callback.description)
             card_body.children.insert(0, card_title)
@@ -82,9 +104,9 @@ class DasherStandardTemplate(DasherBaseTemplate):
             self.body.children.extend([card])
             return html.Div([self.navbar, self.body], id=self.main_name)
         elif n_callbacks == 2:
-            tab_1 = self._create_tab(callback_list[-2], self.body.children)
-            tab_2 = self._create_tab(callback, self._create_card(callback))
-            self.tabs = dbc.Tabs([tab_1, tab_2], id=self.tabs_id)
+            tab_0 = self._create_tab(callback_list[-2], self.body.children)
+            tab_1 = self._create_tab(callback, self._create_card(callback))
+            self.tabs = dbc.Tabs([tab_0, tab_1], id=self.tabs_id)
             self.body.children = self.tabs
             return layout
         else:

@@ -1,4 +1,5 @@
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 from dash.development.base_component import Component
 from dasher.base import DasherWidget, DasherBaseWidgetFactory
 from numbers import Real, Integral
@@ -46,7 +47,7 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
 
     @staticmethod
     def boolean_widget(name, x):
-        return dcc.RadioItems(
+        return dbc.RadioItems(
             id=name,
             options=[
                 {"label": "True", "value": True},
@@ -57,7 +58,7 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
 
     @staticmethod
     def string_widget(name, x):
-        return dcc.Input(id=name, type="text", value=x)
+        return dbc.Input(id=name, type="text", value=x)
 
     @staticmethod
     def iterable_widget(name, x):
@@ -67,7 +68,9 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
             options = [{"label": i, "value": i} for i in x]
 
         if len(options) > 0:
-            return dcc.Dropdown(id=name, options=options, value=options[0]["value"])
+            return dcc.Dropdown(
+                id=name, options=options, clearable=False, value=options[0]["value"]
+            )
         else:
             return None
 
