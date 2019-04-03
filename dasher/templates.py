@@ -39,7 +39,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
         credits = dbc.NavLink(
             "created with dasher",
             className="small",
-            href="http://github.com",
+            href="https://github.com/mfaafm/dasher",
             external_link=True,
         )
         navbar = dbc.NavbarSimple(
