@@ -3,6 +3,11 @@ from dasher.base import DasherBaseTemplate, DasherBaseWidgetFactory, DasherCallb
 from dasher.widgets import DasherWidgetFactory
 from dasher.templates import DasherStandardTemplate
 
+# get version from versioneer
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
+
 
 class Dasher(object):
     def __init__(
@@ -62,3 +67,5 @@ class Dasher(object):
 
     def run_server(self, *args, **kw):
         return self.app.run_server(*args, **kw)
+
+

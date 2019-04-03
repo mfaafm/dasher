@@ -4,6 +4,7 @@ from dash.development.base_component import Component
 from dasher.base import DasherWidget, DasherBaseWidgetFactory
 from numbers import Real, Integral
 from collections import Iterable, Mapping
+from dasher.min_max_value import get_min_max_value
 
 
 class DasherWidgetFactory(DasherBaseWidgetFactory):
@@ -78,14 +79,14 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
         step = None
 
         if len(x) == 1:
-            minimum, maximum, value = self._get_min_max_value(None, None, value=x[0])
+            minimum, maximum, value = get_min_max_value(None, None, value=x[0])
         elif len(x) == 2:
-            minimum, maximum, value = self._get_min_max_value(x[0], x[1])
+            minimum, maximum, value = get_min_max_value(x[0], x[1])
         elif len(x) == 3:
             step = x[2]
             if step < 0:
                 raise ValueError("step must be >= 0")
-            minimum, maximum, value = self._get_min_max_value(x[0], x[1], step=step)
+            minimum, maximum, value = get_min_max_value(x[0], x[1], step=step)
         else:
             raise ValueError("tuple must be (value, ), (min, max) or (min, max, step)")
 
@@ -108,46 +109,3 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
         return dcc.Slider(
             id=name, min=minimum, max=maximum, step=step, value=value, marks=marks
         )
-
-    @staticmethod
-    def _get_min_max_value(minimum, maximum, value=None, step=None):
-        """Return min, max, value given input values with possible None."""
-        # Either min and max need to be given, or value needs to be given
-        if value is None:
-            if minimum is None or maximum is None:
-                raise ValueError(
-                    "unable to infer range, value from: ({0}, {1}, {2})".format(
-                        minimum, maximum, value
-                    )
-                )
-            diff = maximum - minimum
-            value = minimum + (diff / 2)
-            # Ensure that value has the same type as diff
-            if not isinstance(value, type(diff)):
-                value = minimum + (diff // 2)
-        else:  # value is not None
-            if not isinstance(value, Real):
-                raise TypeError("expected a real number, got: %r" % value)
-            # Infer min/max from value
-            if value == 0:
-                # This gives (0, 1) of the correct type
-                vrange = (value, value + 1)
-            elif value > 0:
-                vrange = (-value, 3 * value)
-            else:
-                vrange = (3 * value, -value)
-            if minimum is None:
-                minimum = vrange[0]
-            if maximum is None:
-                maximum = vrange[1]
-        if step is not None:
-            # ensure value is on a step
-            tick = int((value - minimum) / step)
-            value = minimum + tick * step
-        if not minimum <= value <= maximum:
-            raise ValueError(
-                "value must be between min and max (min={0}, value={1}, max={2})".format(
-                    minimum, value, maximum
-                )
-            )
-        return minimum, maximum, value

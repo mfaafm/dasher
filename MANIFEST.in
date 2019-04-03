@@ -1,0 +1,10 @@
+recursive-include dasher *.py
+
+include setup.py
+include README.rst
+include LICENSE
+include MANIFEST.in
+
+# Include files for versioneer
+include versioneer.py
+include dasher/_version.py
