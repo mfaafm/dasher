@@ -39,11 +39,12 @@ See ``examples/plot_demo.py`` for an example!
 For a demo of all supported automatic widgets and an example how to use custom
 components, see ``examples/widget_demo.py``.
 
+
 ## Documentation
 More documentation will arrive soon! Stay tuned!
 
 ## Authors
-[Martijn Arts] (https://github.com/mfaafm)
+[Martijn Arts](https://github.com/mfaafm)
 
 ## License
 [MIT license](LICENSE)
