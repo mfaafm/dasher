@@ -6,11 +6,11 @@ with open("README.md", "r") as f:
 
 setup(
     name="dasher",
-    description="automatically generate interactive plotly dash dashboards instantly",
+    description="Generate interactive plotly dash dashboards in an instant",
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords="dashboard plotly dash prototyping fast",
-    url="https://github.com/dasher/dasher",
+    url="https://github.com/mfaafm/dasher",
     license="MIT",
     author="Martijn Arts",
     author_email="m.arts@gmx.net",
