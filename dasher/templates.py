@@ -49,6 +49,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
             color="primary",
             sticky="top",
             id=self.navbar_id,
+            style={"marginBottom": "1em"},
         )
 
         body = dbc.Container([], id=self.body_id)
