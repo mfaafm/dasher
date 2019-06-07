@@ -5,6 +5,15 @@ from dasher.base import DasherBaseTemplate
 
 
 class DasherStandardTemplate(DasherBaseTemplate):
+    """ Default template of dasher.
+
+    Parameters
+    ----------
+    title: str
+        Title of the dashboard. Shown in the header (navbar).
+    widget_columns: int, default: 2
+        Number of columns used to arrange the interactive widgets of the dashboard.
+    """
     navbar_id = "dasher-navbar"
     tabs_id = "dasher-tabs"
     body_id = "dasher-body"
@@ -66,7 +75,15 @@ class DasherStandardTemplate(DasherBaseTemplate):
 
     @staticmethod
     def _chunks(l, n):
-        """Yield successive n-sized chunks from l."""
+        """ Yield successive n-sized chunks from l.
+
+        Parameters
+        ----------
+        l: iterable
+            Iterable to slice into chunks.
+        n: int
+            Maximum size of each chunk.
+        """
         for i in range(0, len(l), n):
             yield l[i : i + n]
 

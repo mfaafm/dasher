@@ -8,38 +8,84 @@ from dasher.min_max_value import get_min_max_value
 
 
 class DasherWidgetFactory(DasherBaseWidgetFactory):
+    """ Default widget factory of dasher.
+
+    Parameters
+    ----------
+    slider_max_marks: int, default: 8
+        Maximum number of marks used for sliders
+    slider_float_steps: int, default: 60
+        Maximum number of steps used for float sliders
+    """
     def __init__(self, slider_max_marks=8, slider_float_steps=60):
         self.slider_max_marks = slider_max_marks
         self.slider_float_steps = slider_float_steps
 
     def create_widget(self, name, label, x):
-        dash_component = self.create_dash_component(name, x)
+        """
+        Create dasher widget.
+        The type of ``x`` determines which widget will be generated.
+
+        All supported types and their corresponding dash components are:
+        * ``bool``: Radio item (``dash_bootstrap_components.RadioItem``)
+        * ``str``: Input field (``dash_bootstrap_components.Input``)
+        * ``int``: Slider, integers) (``dash_core_components.Slider``)
+        * ``float``: Slider, floats (``dash_core_components.Slider``)
+        * ``tuple``: Slider, (``dash_core_components.Slider``)
+            Can be (min, max) or (min, max, step). The type of all the tuple entries
+            must either be ``int`` or ``float``, which determines whether an integer or
+            float slider will be generated.
+        * ``collections.Iterable``: Dropdown menu (``dash_core_components.Dropdown``)
+            Typically a ``list`` or anything iterable, which is not a ``tuple``.
+        * ``collections.Mapping``: Dropdown menu (``dash_core_components.Dropdown``)
+            Typically a ``dict``. A mapping will use the keys as labels shown in the
+            dropdown menu, while the values will be used as arguments to the callback
+            function.
+        * ``dash.development.base_component.Component``: custom dash component
+            Any dash component will be used as a widget as-is. This allows full
+            customization of a widget if desired. The components ``value`` will be used
+            as argument of the callback function.
+
+        Parameters
+        ----------
+        name: str
+            Unique name of the widget (serves as the dash components ``id``).
+        label: str
+            Label of the widget. This value will be used by the template.
+        x
+            Default value. The type of ``x`` determines which widget will be generated.
+
+        Returns
+        -------
+        widget: DasherWidget
+        """
+        dash_component = self._create_dash_component(name, x)
         if dash_component is not None:
             return DasherWidget(name, label, dash_component)
         else:
             return None
 
-    def create_dash_component(self, name, x):
+    def _create_dash_component(self, name, x):
         if isinstance(x, Component):
-            return self.component_widget(name, x)
+            return self._component_widget(name, x)
         elif isinstance(x, bool):
-            return self.boolean_widget(name, x)
+            return self._boolean_widget(name, x)
 
         elif isinstance(x, str):
-            return self.string_widget(name, x)
+            return self._string_widget(name, x)
 
         if isinstance(x, (Real, Integral)):
             x = (x,)
 
         if isinstance(x, tuple):
-            return self.tuple_widget(name, x)
+            return self._tuple_widget(name, x)
         elif isinstance(x, Iterable):
-            return self.iterable_widget(name, x)
+            return self._iterable_widget(name, x)
         else:
             return None
 
     @staticmethod
-    def component_widget(name, x):
+    def _component_widget(name, x):
         if getattr(x, "id", None) is None:
             x.id = name
         else:
@@ -47,7 +93,7 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
         return x
 
     @staticmethod
-    def boolean_widget(name, x):
+    def _boolean_widget(name, x):
         return dbc.RadioItems(
             id=name,
             options=[
@@ -58,11 +104,11 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
         )
 
     @staticmethod
-    def string_widget(name, x):
+    def _string_widget(name, x):
         return dbc.Input(id=name, type="text", value=x)
 
     @staticmethod
-    def iterable_widget(name, x):
+    def _iterable_widget(name, x):
         if isinstance(x, Mapping):
             options = [{"label": key, "value": value} for key, value in x.items()]
         else:
@@ -75,7 +121,7 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
         else:
             return None
 
-    def tuple_widget(self, name, x):
+    def _tuple_widget(self, name, x):
         step = None
 
         if len(x) == 1:
