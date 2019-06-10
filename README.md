@@ -43,20 +43,20 @@ in jupyter notebooks. That is, by decorating a user defined callback function! H
 the keyword arguments of the decorator define the interactive widgets and the callback 
 function must return what you want to show in the content container in the dashboard. 
 
-Dasher provides a simple default layout with a navbar with the dashboard's title, a 
-widget container providing the interactivity and the content container. 
+Dasher provides a simple default layout consisting of a header with the dashboard's 
+title, a widget container providing the interactivity and the content container. 
 The only thing you need to do in the callback function is to process the input arguments
 (which correspond to the widgets) and to return a list of the plotly dash components 
 that you want to appear in the content container!
 
 The interactive widgets are automatically generated based on the type of the keyword 
 arguments of the decorator. For example, a string will result in an input field and 
-a list will become a dropdown box. Dasher supports the same widgets abbreviations as
+a list will become a dropdown box. Dasher supports the same widget abbreviations as
 [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/examples/Using%20Interact.html#Widget-abbreviations)
 ``interact``.
 
 Since the layout and the widget connections to the callback are taken care of by
-dasher, you can concentrate on what you to display on the dashboar! As a result,
+dasher, you can concentrate on what you to display on the dashboard. As a result,
 generating a stunning interactive visualization becomes a matter of minutes! 
 
 ### Supported widgets
@@ -68,7 +68,7 @@ are:
 * ``int``: Slider, integer (``dash_core_components.Slider``)
 * ``float``: Slider, float (``dash_core_components.Slider``)
 * ``tuple``: Slider, (``dash_core_components.Slider``)  
-    Can be (min, max) or (min, max, step). The type of all the tuple entries
+    Can be ``(min, max)`` or ``(min, max, step)``. The type of all the tuple entries
     must either be ``int`` or ``float``, which determines whether an integer or
     float slider will be generated.
 * ``collections.Iterable``: Dropdown menu (``dash_core_components.Dropdown``)  
