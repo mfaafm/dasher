@@ -4,10 +4,16 @@ import dash_html_components as html
 app = Dasher(__name__, title="My first dashboard")
 
 
-@app.callback("My first callback", "Type something...!", text="Hello World!")
-def my_callback(text):
-    return [html.H1(text)]
+@app.callback(
+    "My first callback",
+    "Try out the widgets!",
+    text="Hello",
+    place=["World", "Universe"],
+)
+def my_callback(text, place):
+    msg = "{} {}!".format(text, place)
+    return [html.H1(msg)]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run_server(debug=True)

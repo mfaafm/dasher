@@ -21,7 +21,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
     tab_base = "dasher-tab"
     output_base = "dasher-output"
 
-    def __init__(self, title="Dasher dashboard", widget_columns=2):
+    def __init__(self, title="Dasher dashboard", widget_columns=2, credits=True):
         self.__title = title
         if widget_columns < 1:
             raise ValueError("widget_columns must be >= 1")
@@ -29,6 +29,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
 
         self.external_stylesheets = [dbc.themes.BOOTSTRAP]
         self.tabs = None
+        self.credits = credits
         self.navbar, self.body = self._create_base_layout()
 
     @property
@@ -45,14 +46,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
         return "{}-{}".format(base, _id)
 
     def _create_base_layout(self):
-        credits = dbc.NavLink(
-            "created with dasher",
-            className="small",
-            href="https://github.com/mfaafm/dasher",
-            external_link=True,
-        )
         navbar = dbc.NavbarSimple(
-            credits,
             brand=self.title,
             dark=True,
             color="primary",
@@ -60,6 +54,14 @@ class DasherStandardTemplate(DasherBaseTemplate):
             id=self.navbar_id,
             style={"marginBottom": "1em"},
         )
+        if self.credits:
+            credit = dbc.NavLink(
+                "created with dasher",
+                className="small",
+                href="https://github.com/mfaafm/dasher",
+                external_link=True,
+            )
+            navbar.children = [credit]
 
         body = dbc.Container([], id=self.body_id)
         return navbar, body
