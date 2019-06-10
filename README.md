@@ -3,7 +3,7 @@ Generate interactive plotly dash dashboards in an instant!
 
 ## Installation
 
-Install the module using pip::
+Install the module using pip:
 
     pip install -U dasher
 
