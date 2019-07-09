@@ -1,7 +1,7 @@
 recursive-include dasher *.py
 
 include setup.py
-include README.rst
+include README.md
 include LICENSE
 include MANIFEST.in
 
