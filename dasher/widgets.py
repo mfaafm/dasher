@@ -17,6 +17,7 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
     slider_float_steps: int, default: 60
         Maximum number of steps used for float sliders
     """
+
     def __init__(self, slider_max_marks=8, slider_float_steps=60):
         self.slider_max_marks = slider_max_marks
         self.slider_float_steps = slider_float_steps

@@ -14,6 +14,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
     widget_columns: int, default: 2
         Number of columns used to arrange the interactive widgets of the dashboard.
     """
+
     navbar_id = "dasher-navbar"
     tabs_id = "dasher-tabs"
     body_id = "dasher-body"
