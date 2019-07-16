@@ -28,9 +28,10 @@ class DasherWidget(object):
 
 
 class DasherCallback(object):
-    def __init__(self, _id, name, description, kw, widget_list):
+    def __init__(self, _id, name, description, kw, widget_list, labels):
         self.id = _id
         self.name = name
         self.description = description
         self.kw = kw
         self.widget_list = widget_list
+        self.labels = labels

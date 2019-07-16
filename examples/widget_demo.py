@@ -9,6 +9,19 @@ app = Dasher(__name__, title="Widget Demo")
 @app.callback(
     "All widgets",
     "Demo of all supported automatic widgets and one custom component",
+    _labels={
+        "boolean": "bool",
+        "string": "str",
+        "enum": "list-like",
+        "mapping": "dict-like",
+        "integer": "int",
+        "tuple_int_2": "int 2-tuple",
+        "tuple_int_3": "int 3-tuple",
+        "floating": "float",
+        "tuple_float_2": "float 2-tuple",
+        "tuple_float_3": "float 3-tuple",
+        "custom_component": "Custom dash component"
+    },
     boolean=True,
     string="Test",
     enum=["apple", "orange", "lemon", "banana"],

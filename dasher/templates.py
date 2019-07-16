@@ -107,7 +107,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
         card = dbc.Card([card_header, card_body])
 
         if callback.description is not None:
-            card_title = dbc.CardTitle(callback.description)
+            card_title = html.H4(callback.description, className="card-title")
             card_body.children.insert(0, card_title)
         return card
 
