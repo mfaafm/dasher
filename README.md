@@ -19,6 +19,7 @@ Creating a simple, interactive dashboard with a nice layout is as easy as this:
     @app.callback(
         "My first callback",
         "Try out the widgets!",
+        _labels=["Greeting", "Place"],
         text="Hello",
         place=["World", "Universe"],
     )

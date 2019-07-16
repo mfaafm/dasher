@@ -30,6 +30,6 @@ setup(
         "dash",
         "dash-core-components",
         "dash-html-components",
-        "dash-bootstrap-components",
+        "dash-bootstrap-components>=0.6",
     ],
 )
