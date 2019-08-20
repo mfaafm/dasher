@@ -7,7 +7,7 @@ app = Dasher(__name__, title="My first dashboard")
 @app.callback(
     "My first callback",
     "Try out the widgets!",
-    _labels = ["Greeting", "Place"],
+    _labels=["Greeting", "Place"],
     text="Hello",
     place=["World", "Universe"],
 )

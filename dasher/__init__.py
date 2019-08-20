@@ -1,8 +1,8 @@
 import dash
 from dasher.base import DasherBaseTemplate, DasherBaseWidgetFactory, DasherCallback
+from dasher.api import DasherApi
 from dasher.widgets import DasherWidgetFactory
 from dasher.templates import DasherStandardTemplate
-from collections.abc import Sequence, Mapping
 
 # get version from versioneer
 from ._version import get_versions
@@ -30,22 +30,13 @@ class Dasher(object):
         Keyword arguments are passed to the ``dash.Dash`` app.
     """
 
-    def __init__(
-        self,
-        name,
-        title=None,
-        template=DasherStandardTemplate(),
-        widget_factory=DasherWidgetFactory(),
-        **kw
-    ):
+    def __init__(self, name, title=None, template=DasherStandardTemplate(), **kw):
         if not isinstance(template, DasherBaseTemplate):
             raise ValueError("template must be an instance of DasherBaseTemplate")
         self.template = template
         if title is not None:
             self.template.title = title
-        if not isinstance(widget_factory, DasherBaseWidgetFactory):
-            raise ValueError("widgets must be an instance of DasherBaseWidgetFactory")
-        self.widget_factory = widget_factory
+        self.api = DasherApi()
         self.callback_list = []
 
         ext_stylesheets = kw.get("external_stylesheets", [])
@@ -56,38 +47,6 @@ class Dasher(object):
         ext_stylesheets = self.template.external_stylesheets.copy()
         ext_stylesheets.extend(args)
         return ext_stylesheets
-
-    @staticmethod
-    def _get_widget_name(key, _id):
-        return "{}-{}".format(key, _id)
-
-    @staticmethod
-    def _validate_labels(_labels, kw):
-        if isinstance(_labels, Sequence) and len(_labels) != len(kw):
-            raise ValueError("_labels must be of same length as kw")
-
-    @staticmethod
-    def _create_labels(_labels, kw):
-        if _labels is None:
-            return {k: k for k in kw.keys()}
-        elif isinstance(_labels, Sequence):
-            if len(_labels) != len(kw):
-                raise ValueError("_labels must be of same length as kw")
-            return {k: l for k, l in zip(kw.keys(), _labels)}
-        elif isinstance(_labels, Mapping):
-            return {k: _labels.get(k, k) for k in kw.keys()}
-        else:
-            return ValueError("_labels must be list-like, dict-like or None")
-
-    def _generate_widgets(self, _id, labels, kw):
-        widget_list = []
-        for key, value in kw.items():
-            name = self._get_widget_name(key, _id)
-            widget = self.widget_factory.create_widget(name, labels[key], value)
-            if widget is None:
-                raise ValueError("Cannot generate a widget for keyword {}".format(key))
-            widget_list.append(widget)
-        return widget_list
 
     def callback(self, _name, _desc=None, _labels=None, **kw):
         """
@@ -123,20 +82,27 @@ class Dasher(object):
         widgets.DasherWidgetFactory : Default widget factory
 
         """
-        labels = self._create_labels(_labels, kw)
 
         def function_wrapper(f):
-            callback_id = len(self.callback_list)
-            widget_list = self._generate_widgets(callback_id, labels, kw)
-            new_callback = DasherCallback(
-                callback_id, _name, _desc, kw, widget_list, labels
+            widgets = self.api.generate_widgets(kw, _labels, _name)
+            outputs, inputs = self.api.generate_dependencies(
+                widgets, f"dasher-output-{_name}"
             )
-            self.callback_list.append(new_callback)
+            callback = DasherCallback(
+                name=_name,
+                description=_desc,
+                f=f,
+                kw=kw,
+                labels=_labels,
+                widgets=widgets,
+                outputs=outputs,
+                inputs=inputs,
+            )
+            self.callback_list.append(callback)
             self.app.layout = self.template.update_layout(
                 self.app.layout, self.callback_list
             )
-            output, input_list = self.template.generate_connections(new_callback)
-            return self.app.callback(output, input_list)(f)
+            return self.api.register_callback(self.app, callback)
 
         return function_wrapper
 

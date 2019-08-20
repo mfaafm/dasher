@@ -20,18 +20,31 @@ class DasherBaseTemplate(ABC):
         pass
 
 
-class DasherWidget(object):
-    def __init__(self, name, label, dash_component):
+class DasherComponent(ABC):
+    def __init__(self, name, x):
         self.name = name
-        self.label = label
-        self.dash_component = dash_component
+        self.x = x
+
+    @abstractmethod
+    def generate(self):
+        pass
+
+
+class DasherWidget(object):
+    def __init__(self, name, component, label=None):
+        self.name = name
+        self.component = component
+        self.label = label if label is not None else name
 
 
 class DasherCallback(object):
-    def __init__(self, _id, name, description, kw, widget_list, labels):
-        self.id = _id
+    def __init__(self, name, description, f, kw, labels, widgets, outputs, inputs):
         self.name = name
         self.description = description
+        self.f = f
         self.kw = kw
-        self.widget_list = widget_list
         self.labels = labels
+        self.widgets = widgets
+        self.outputs = outputs
+        self.inputs = inputs
+

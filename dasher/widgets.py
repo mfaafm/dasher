@@ -4,7 +4,7 @@ from dash.development.base_component import Component
 from dasher.base import DasherWidget, DasherBaseWidgetFactory
 from numbers import Real, Integral
 from collections import Iterable, Mapping
-from dasher.min_max_value import get_min_max_value
+from dasher.components.min_max_value import get_min_max_value
 
 
 class DasherWidgetFactory(DasherBaseWidgetFactory):

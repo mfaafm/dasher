@@ -70,10 +70,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
     @staticmethod
     def _create_form_group(widget):
         return dbc.FormGroup(
-            [
-                dbc.Label(widget.label, html_for=widget.dash_component.id),
-                widget.dash_component,
-            ]
+            [dbc.Label(widget.label, html_for=widget.component.id), widget.component]
         )
 
     @staticmethod
@@ -91,12 +88,12 @@ class DasherStandardTemplate(DasherBaseTemplate):
             yield l[i : i + n]
 
     def _create_form(self, callback):
-        cols = [dbc.Col(self._create_form_group(w)) for w in callback.widget_list]
+        cols = [dbc.Col(self._create_form_group(w)) for w in callback.widgets]
         rows = [dbc.Row(row) for row in self._chunks(cols, self.widget_columns)]
         return dbc.Form(rows)
 
     def _create_output(self, callback):
-        output_id = self._get_div_name(self.output_base, callback.id)
+        output_id = self._get_div_name(self.output_base, callback.name)
         return html.Div(id=output_id)
 
     def _create_card(self, callback):
@@ -113,7 +110,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
         return card
 
     def _create_tab(self, callback, card):
-        tab_id = self._get_div_name(self.tab_base, callback.id)
+        tab_id = self._get_div_name(self.tab_base, callback.name)
         return dbc.Tab(card, id=tab_id, label=callback.name)
 
     def update_layout(self, layout, callback_list):
@@ -138,10 +135,10 @@ class DasherStandardTemplate(DasherBaseTemplate):
     def generate_connections(self, callback):
         input_list = [
             Input(component_id=w.name, component_property="value")
-            for w in callback.widget_list
+            for w in callback.widgets
         ]
         output = Output(
-            component_id=self._get_div_name(self.output_base, callback.id),
+            component_id=self._get_div_name(self.output_base, callback.name),
             component_property="children",
         )
         return output, input_list
