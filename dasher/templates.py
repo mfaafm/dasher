@@ -1,6 +1,5 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output
 from dasher.base import DasherBaseTemplate
 
 
@@ -70,7 +69,7 @@ class DasherStandardTemplate(DasherBaseTemplate):
     @staticmethod
     def _create_form_group(widget):
         return dbc.FormGroup(
-            [dbc.Label(widget.label, html_for=widget.component.id), widget.component]
+            [dbc.Label(widget.label, html_for=widget.layout.id), widget.layout]
         )
 
     @staticmethod
@@ -131,14 +130,3 @@ class DasherStandardTemplate(DasherBaseTemplate):
             card = self._create_card(callback)
             self.tabs.children.append(self._create_tab(callback, card))
             return layout
-
-    def generate_connections(self, callback):
-        input_list = [
-            Input(component_id=w.name, component_property="value")
-            for w in callback.widgets
-        ]
-        output = Output(
-            component_id=self._get_div_name(self.output_base, callback.name),
-            component_property="children",
-        )
-        return output, input_list

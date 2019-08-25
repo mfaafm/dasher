@@ -8,7 +8,7 @@ app = Dasher(__name__, title="Widget Demo")
 
 @app.callback(
     "All widgets",
-    "Demo of all supported automatic widgets and one custom component",
+    "Demo of all supported automatic widgets and one custom layout",
     _labels={
         "boolean": "bool",
         "string": "str",
@@ -20,7 +20,7 @@ app = Dasher(__name__, title="Widget Demo")
         "floating": "float",
         "tuple_float_2": "float 2-tuple",
         "tuple_float_3": "float 3-tuple",
-        "custom_component": "Custom dash component"
+        "custom_component": "Custom dash layout"
     },
     boolean=True,
     string="Test",

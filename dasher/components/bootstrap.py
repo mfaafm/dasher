@@ -5,20 +5,13 @@ from numbers import Real, Integral
 from collections import OrderedDict
 from dash.development.base_component import Component
 from dasher.base import DasherComponent
+from dasher.components import DashComponent
 from .min_max_value import get_min_max_value
 
 
-class DashComponent(DasherComponent):
-    def generate(self):
-        if getattr(self.x, "id", None) is None:
-            self.x.id = self.name
-        else:
-            raise ValueError("Component id must be empty.")
-        return self.x
-
-
 class BoolComponent(DasherComponent):
-    def generate(self):
+    @property
+    def layout(self):
         return dbc.RadioItems(
             id=self.name,
             options=[
@@ -30,12 +23,14 @@ class BoolComponent(DasherComponent):
 
 
 class StringComponent(DasherComponent):
-    def generate(self):
+    @property
+    def layout(self):
         return dbc.Input(id=self.name, type="text", value=self.x)
 
 
 class IterableComponent(DasherComponent):
-    def generate(self):
+    @property
+    def layout(self):
         if isinstance(self.x, Mapping):
             options = [{"label": k, "value": v} for k, v in self.x.items()]
         else:
@@ -58,7 +53,8 @@ class TupleComponent(DasherComponent):
         self.slider_max_marks = slider_max_marks
         self.slider_float_steps = slider_float_steps
 
-    def generate(self):
+    @property
+    def layout(self):
         step = None
 
         if len(self.x) == 1:

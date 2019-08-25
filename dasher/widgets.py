@@ -42,8 +42,8 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
             Typically a ``dict``. A mapping will use the keys as labels shown in the
             dropdown menu, while the values will be used as arguments to the callback
             function.
-        * ``dash.development.base_component.Component``: custom dash component
-            Any dash component will be used as a widget as-is. This allows full
+        * ``dash.development.base_component.Component``: custom dash layout
+            Any dash layout will be used as a widget as-is. This allows full
             customization of a widget if desired. The components ``value`` will be used
             as argument of the callback function.
 

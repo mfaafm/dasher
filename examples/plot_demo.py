@@ -26,8 +26,8 @@ def line_plot(column):
 def bar_plot(column):
     return [
         dcc.Graph(
-            figure=go.Figure(
-                data=[
+            figure={
+                "data": [
                     go.Bar(
                         x=df.x,
                         y=df[column],
@@ -35,7 +35,7 @@ def bar_plot(column):
                         marker=go.bar.Marker(color="rgb(55, 83, 109)"),
                     )
                 ]
-            )
+            }
         )
     ]
 

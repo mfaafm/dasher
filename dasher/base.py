@@ -1,23 +1,5 @@
 from abc import ABC, abstractmethod
-
-
-class DasherBaseWidgetFactory(ABC):
-    @classmethod
-    @abstractmethod
-    def create_widget(cls, name, label, x):
-        pass
-
-
-class DasherBaseTemplate(ABC):
-    @classmethod
-    @abstractmethod
-    def update_layout(cls, layout, callback_list):
-        pass
-
-    @classmethod
-    @abstractmethod
-    def generate_connections(cls, callback):
-        pass
+from dash.development.base_component import Component
 
 
 class DasherComponent(ABC):
@@ -25,16 +7,37 @@ class DasherComponent(ABC):
         self.name = name
         self.x = x
 
+    @property
     @abstractmethod
-    def generate(self):
+    def layout(self):
         pass
 
 
 class DasherWidget(object):
-    def __init__(self, name, component, label=None):
-        self.name = name
+    def __init__(self, component, label, layout):
         self.component = component
-        self.label = label if label is not None else name
+        self.label = label
+        if not isinstance(layout, Component):
+            raise TypeError("widget must be a dash Component")
+        self.layout = layout
+
+
+class DasherLayout(ABC):
+    def __init__(self, title, credits=True):
+        if title is None:
+            self.title = "Dasher app"
+        else:
+            self.title = title
+        self.credits = credits
+
+    @staticmethod
+    @abstractmethod
+    def render_component(label, component):
+        pass
+
+    @abstractmethod
+    def add_callback(self, callback, app):
+        pass
 
 
 class DasherCallback(object):
@@ -47,4 +50,4 @@ class DasherCallback(object):
         self.widgets = widgets
         self.outputs = outputs
         self.inputs = inputs
-
+        self.layout = None
