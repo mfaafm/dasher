@@ -36,7 +36,7 @@ class DasherLayout(ABC):
         pass
 
     @abstractmethod
-    def add_callback(self, callback, app):
+    def add_callback(self, callback, app, **kwargs):
         pass
 
 

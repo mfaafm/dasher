@@ -69,12 +69,16 @@ class DefaultLayout(DasherLayout):
         for i in range(0, len(l), n):
             yield l[i : i + n]
 
-    def render_card(self, callback):
+    def render_card(self, callback, **kwargs):
+        widget_cols = kwargs.get("widget_cols", self.widget_cols)
+
         cols = [dbc.Col(w.layout) for w in callback.widgets]
-        rows = [dbc.Row(row) for row in self._chunks(cols, self.widget_cols)]
+        rows = [dbc.Row(row) for row in self._chunks(cols, widget_cols)]
         widgets_form = dbc.Form(rows, id=f"{self.widgets_base}-{callback.name}")
 
-        output = html.Div(id=f"{self.output_base}-{callback.name}")
+        output = dbc.Container(
+            id=f"{self.output_base}-{callback.name}", style={"marginTop": "1em"}
+        )
 
         card_header = dbc.CardHeader(callback.name)
         card_body = dbc.CardBody([widgets_form, output])
@@ -83,7 +87,10 @@ class DefaultLayout(DasherLayout):
             card_body.children.insert(0, card_title)
         return dbc.Card([card_header, card_body])
 
-    def add_callback(self, callback, app):
+    def add_callback(self, callback, app, layout_kw=None):
+        if layout_kw is None:
+            layout_kw = {}
+
         tab = dbc.Tab(label=callback.name, tab_id=callback.name)
 
         if len(self.callbacks) == 0:
@@ -104,7 +111,7 @@ class DefaultLayout(DasherLayout):
 
         self.tabs.children.append(tab)
 
-        content = self.render_card(callback)
+        content = self.render_card(callback, **layout_kw)
 
         self.callbacks[callback.name] = callback
         callback.layout = content

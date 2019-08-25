@@ -32,16 +32,14 @@ class Dasher(object):
     def __init__(self, name, title=None, api_kw=None, dash_kw=None):
         if api_kw is None:
             api_kw = {}
-
         self.api = DasherApi(title, **api_kw)
 
         if dash_kw is None:
             dash_kw = {}
-
         dash_kw = self._update_external_stylesheets(dash_kw)
         self.app = dash.Dash(name, suppress_callback_exceptions=True, **dash_kw)
 
-        self.app.layout = self.api.get_app_layout()
+        self.app.layout = self.api.layout.layout
         self.callbacks = {}
 
     def _update_external_stylesheets(self, dash_kw):
@@ -50,7 +48,7 @@ class Dasher(object):
         kw["external_stylesheets"] = layout_sheets + kw.get("external_stylesheets", [])
         return kw
 
-    def callback(self, _name, _desc=None, _labels=None, **kw):
+    def callback(self, _name, _desc=None, _labels=None, _layout=None, **kw):
         """
         Decorator, which defines a callback function.
         Each callback function results in a tab in the dashboard. The keywords arguments
@@ -101,7 +99,7 @@ class Dasher(object):
                 inputs=inputs,
             )
             self.callbacks[callback.name] = callback
-            self.api.add_callback_to_layout(callback, self.app)
+            self.api.layout.add_callback(callback, self.app, _layout)
             return self.api.connect_callback(self.app, callback)
 
         return function_wrapper

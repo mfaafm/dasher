@@ -89,12 +89,6 @@ class DasherApi(object):
         output = Output(output_id, "children")
         return output, input_list
 
-    def add_callback_to_layout(self, callback, app):
-        return self.layout.add_callback(callback, app)
-
-    def get_app_layout(self):
-        return self.layout.layout
-
     @staticmethod
     def connect_callback(app, callback):
         return app.callback(callback.outputs, callback.inputs)(callback.f)
