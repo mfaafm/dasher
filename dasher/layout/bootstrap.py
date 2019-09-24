@@ -4,16 +4,55 @@ from dasher.base import DasherLayout
 from dash.dependencies import Input, Output
 
 
-class DefaultLayout(DasherLayout):
+class BootstrapLayout(DasherLayout):
+    """ Dasher boostrap layout.
+    This layout utilizes ``dash_bootstrap_components`` to build the app layout.
+
+    Attributes
+    ----------
+    widget_cols: int
+        Group the interactive components into ``widget_cols`` number of columns.
+    include_stylesheets: bool
+        If true, includes the standard bootstrap theme as external stylesheets.
+    external_stylesheets: list of str, optional
+        Only present of `include_stylesheets` is ``True``. It contains a list with
+        the standard bootstrap theme as its' only value.
+    navbar: dash_bootstrap_components.NavbarSimple
+        Navigation bar of the layout.
+    body: dash_bootstrap_components.Container
+        Container for the body of the app, containing the tab control and the tab
+        contents div.
+    layout: dash_html_components.Div
+        Layout of the app. The div contains `navbar` and `body`.
+    tabs: dash_bootstrap_components.Tabs
+        Tab control to separate the layout of the callbacks.
+    tabs_content: dash_html_components.Div
+        Content div used to render the selected tab.
+    callbacks: dict of DasherCallback
+        Dictionary containing the callbacks present in the layout.
+    """
+
     navbar_id = "dasher-navbar"
     body_id = "dasher-body"
     tabs_id = "dasher-tabs"
     tabs_content_id = "dasher-tabs-content"
     tab_base = "dasher-tab"
     widgets_base = "dasher-widgets"
-    output_base = "dasher-output"
 
     def __init__(self, title, credits=True, include_stylesheets=True, widget_cols=2):
+        """
+        Parameters
+        ----------
+        title: str
+            Title of the app.
+        credits: bool, default True
+            If true, shows a link to dasher's github page in the navigation bar.
+        include_stylesheets: bool, default True
+            If true, includes the standard bootstrap theme as external stylesheets. Set
+            it to false to use a customized bootstrap theme.
+        widget_cols: int, default 2
+            Group the interactive components into ``widget_cols`` number of columns.
+        """
         super().__init__(title, credits)
 
         if widget_cols < 1:
@@ -28,6 +67,7 @@ class DefaultLayout(DasherLayout):
         self.callbacks = {}
 
     def render_base_layout(self):
+        """ Create base layout with navigation bar and body container. """
         navbar = dbc.NavbarSimple(
             brand=self.title,
             dark=True,
@@ -51,6 +91,21 @@ class DefaultLayout(DasherLayout):
 
     @staticmethod
     def render_component(label, component):
+        """ Render the dasher component and label into a dasher widget layout using
+        ``dash_bootstrap_components.FormGroup`` and ``dash_bootstrap_components.Label``.
+
+        Parameters
+        ----------
+        label: str
+            A label for the interactive dasher component.
+        component: DasherComponent
+            An interactive dasher component.
+
+        Returns
+        -------
+        dash_bootstrap_components.FormGroup
+            Layout for the dasher widget.
+        """
         return dbc.FormGroup(
             [dbc.Label(label, html_for=component.name), component.layout]
         )
@@ -70,6 +125,7 @@ class DefaultLayout(DasherLayout):
             yield l[i : i + n]
 
     def render_card(self, callback, **kwargs):
+        """ Renders a card with the interactive components and the output container. """
         widget_cols = kwargs.get("widget_cols", self.widget_cols)
 
         cols = [dbc.Col(w.layout) for w in callback.widgets]
@@ -87,10 +143,17 @@ class DefaultLayout(DasherLayout):
             card_body.children.insert(0, card_title)
         return dbc.Card([card_header, card_body])
 
-    def add_callback(self, callback, app, layout_kw=None):
-        if layout_kw is None:
-            layout_kw = {}
-
+    def add_callback(self, callback, app, **kwargs):
+        """ Add callback to the layout.
+        Parameters
+        ----------
+        callback: DasherCallback
+            The dasher callback to add to the layout.
+        app: dash.Dash
+            The dash app.
+        **kwargs:
+           Keyword arguments to override default layout settings for a callback.
+        """
         tab = dbc.Tab(label=callback.name, tab_id=callback.name)
 
         if len(self.callbacks) == 0:
@@ -111,10 +174,11 @@ class DefaultLayout(DasherLayout):
 
         self.tabs.children.append(tab)
 
-        content = self.render_card(callback, **layout_kw)
+        content = self.render_card(callback, **kwargs)
 
         self.callbacks[callback.name] = callback
         callback.layout = content
 
     def render_callback(self, name):
+        """ Callback method used to switch between tabs. """
         return self.callbacks[name].layout

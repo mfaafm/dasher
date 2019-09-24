@@ -1,3 +1,30 @@
+""" Module containing the component specification and implementation of the interactive
+dasher components based on ``dash_bootstrap_components``.
+
+The component specification supports the following types and generates the corresponding
+interactive components:
+
+* ``bool``: Radio Items
+* ``str``: Input field
+* ``int``: Slider, integer
+* ``float``: Slider, floats
+* ``tuple``: Slider
+  Can be (min, max) or (min, max, step). The type of all the tuple entries
+  must either be ``int`` or ``float``, which determines whether an integer or
+  float slider will be generated.
+* ``collections.Iterable``: Dropdown menu
+  Typically a ``list`` or anything iterable.
+* ``collections.Mapping``: Dropdown menu
+  Typically a ``dict``. A mapping will use the keys as labels shown in the
+  dropdown menu, while the values will be used as arguments to the callback
+  function.
+* ``dash.development.base_component.Component``: custom dash component
+  Any dash component will be used as-is. This allows full customization of a
+  component if desired. The components ``value`` will be used as argument to
+  the callback function.
+
+"""
+
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from collections.abc import Iterable, Mapping
@@ -10,6 +37,7 @@ from .min_max_value import get_min_max_value
 
 
 class BoolComponent(DasherComponent):
+    """ RadioItems component used for booleans. """
     @property
     def layout(self):
         return dbc.RadioItems(
@@ -23,12 +51,14 @@ class BoolComponent(DasherComponent):
 
 
 class StringComponent(DasherComponent):
+    """ Input field component used for for strings. """
     @property
     def layout(self):
         return dbc.Input(id=self.name, type="text", value=self.x)
 
 
 class IterableComponent(DasherComponent):
+    """ Dropdown component used for iterables and mappings. """
     @property
     def layout(self):
         if isinstance(self.x, Mapping):
@@ -48,9 +78,22 @@ class IterableComponent(DasherComponent):
 
 
 class TupleComponent(DasherComponent):
-    def __init__(self, name, x, slider_max_marks=8, slider_float_steps=60):
+    """ Slider components used for tuples of numbers. """
+    def __init__(self, name, x, slider_max_ticks=8, slider_float_steps=60):
+        """
+        Parameters
+        ----------
+        name: str
+            Name of the component.
+        x: tuple of int or float
+            Tuple used to configure the slider.
+        slider_max_ticks: int, default 8
+            Maximum number of ticks to draw for the slider.
+        slider_float_steps: int, default 60
+            Number of float steps to use if step is not defined explicity.
+        """
         super().__init__(name, x)
-        self.slider_max_marks = slider_max_marks
+        self.slider_max_marks = slider_max_ticks
         self.slider_float_steps = slider_float_steps
 
     @property
@@ -58,7 +101,7 @@ class TupleComponent(DasherComponent):
         step = None
 
         if len(self.x) == 1:
-            minimum, maximum, value = get_min_max_value(None, None, value=self.x[0])
+            minimum, maximum, value = get_min_max_value(None, None, x=self.x[0])
         elif len(self.x) == 2:
             minimum, maximum, value = get_min_max_value(self.x[0], self.x[1])
         elif len(self.x) == 3:
@@ -91,6 +134,7 @@ class TupleComponent(DasherComponent):
 
 
 class NumberComponent(TupleComponent):
+    """ Component used for numbers. """
     def __init__(self, name, x):
         super().__init__(name, (x,))
 
@@ -105,3 +149,4 @@ COMPONENTS = OrderedDict(
         (Iterable, IterableComponent),
     ]
 )
+""" Component specification. """

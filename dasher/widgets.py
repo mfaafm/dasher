@@ -126,7 +126,7 @@ class DasherWidgetFactory(DasherBaseWidgetFactory):
         step = None
 
         if len(x) == 1:
-            minimum, maximum, value = get_min_max_value(None, None, value=x[0])
+            minimum, maximum, value = get_min_max_value(None, None, x=x[0])
         elif len(x) == 2:
             minimum, maximum, value = get_min_max_value(x[0], x[1])
         elif len(x) == 3:

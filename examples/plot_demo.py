@@ -17,7 +17,12 @@ df = pd.DataFrame(
 )
 
 
-@app.callback("Line plot", column=df.columns.drop("x"))
+@app.callback(
+    "Line plot",
+    _desc="Try it out!",
+    _labels=["y-Axis column"],
+    column=df.columns.drop("x"),
+)
 def line_plot(column):
     return [dcc.Graph(figure={"data": [{"x": df.x, "y": df[column]}]})]
 

@@ -2,6 +2,8 @@ from dasher.base import DasherComponent
 
 
 class DashComponent(DasherComponent):
+    """ Passthrough for custom dash components. """
+
     @property
     def layout(self):
         if getattr(self.x, "id", None) is None:
