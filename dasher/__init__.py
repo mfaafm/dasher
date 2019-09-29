@@ -32,7 +32,6 @@ class Dasher(object):
         self,
         name,
         title=None,
-        components="bootstrap",
         layout="bootstrap",
         layout_kw=None,
         dash_kw=None,
@@ -44,9 +43,6 @@ class Dasher(object):
             Name of the app, typically `__name__`.
         title: str, optional
             Title of the app.
-        components: str or OrderedDict, optional
-            Name of a built-in component specification or an OrderedDict containing
-            a component specification.
         layout: str or DasherLayout subclass, optional
             Name of a built-in layout or custom layout (DasherLayout subclass)
         layout_kw: dict, optional
@@ -55,7 +51,7 @@ class Dasher(object):
             Dictionary of keyword arguments passed to the dash app.
         """
 
-        self.api = DasherApi(title, components, layout, layout_kw)
+        self.api = DasherApi(title, layout, layout_kw)
 
         if dash_kw is None:
             dash_kw = {}

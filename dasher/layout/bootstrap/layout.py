@@ -2,9 +2,10 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dasher.base import DasherLayout
 from dash.dependencies import Input, Output
+from .widgets import WIDGET_SPEC
 
 
-class BootstrapLayout(DasherLayout):
+class DasherBootstrapLayout(DasherLayout):
     """ Dasher boostrap layout.
     This layout utilizes ``dash_bootstrap_components`` to build the app layout.
 
@@ -39,21 +40,33 @@ class BootstrapLayout(DasherLayout):
     tab_base = "dasher-tab"
     widgets_base = "dasher-widgets"
 
-    def __init__(self, title, credits=True, include_stylesheets=True, widget_cols=2):
+    def __init__(
+        self,
+        title,
+        widget_spec=WIDGET_SPEC,
+        credits=True,
+        include_stylesheets=True,
+        widget_cols=2,
+    ):
         """
         Parameters
         ----------
         title: str
             Title of the app.
-        credits: bool, default True
+        widget_spec: OrderedDict, optional
+            Widget specification.
+            Default: ``dasher.layout.bootstrap.widgets.WIDGET_SPEC``.
+        credits: bool, optional
             If true, shows a link to dasher's github page in the navigation bar.
-        include_stylesheets: bool, default True
+            Default: True.
+        include_stylesheets: bool, optional
             If true, includes the standard bootstrap theme as external stylesheets. Set
-            it to false to use a customized bootstrap theme.
-        widget_cols: int, default 2
+            it to false to use a customized bootstrap theme. Default: True.
+        widget_cols: int, optional
             Group the interactive components into ``widget_cols`` number of columns.
+            Default: 2.
         """
-        super().__init__(title, credits)
+        super().__init__(title, widget_spec, credits)
 
         if widget_cols < 1:
             raise ValueError("widget_cols must be >= 1")
@@ -88,27 +101,6 @@ class BootstrapLayout(DasherLayout):
             )
             navbar.children = [credit]
         return navbar, body
-
-    @staticmethod
-    def render_component(label, component):
-        """ Render the dasher component and label into a dasher widget layout using
-        ``dash_bootstrap_components.FormGroup`` and ``dash_bootstrap_components.Label``.
-
-        Parameters
-        ----------
-        label: str
-            A label for the interactive dasher component.
-        component: DasherComponent
-            An interactive dasher component.
-
-        Returns
-        -------
-        dash_bootstrap_components.FormGroup
-            Layout for the dasher widget.
-        """
-        return dbc.FormGroup(
-            [dbc.Label(label, html_for=component.name), component.layout]
-        )
 
     @staticmethod
     def _chunks(l, n):

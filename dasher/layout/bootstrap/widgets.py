@@ -1,8 +1,8 @@
-""" Module containing the component specification and implementation of the interactive
-dasher components based on ``dash_bootstrap_components``.
+""" Module containing the widget specification and implementation of the interactive
+dasher widgets based on ``dash_bootstrap_components``.
 
-The component specification supports the following types and generates the corresponding
-interactive components:
+The widget specification supports the following types and generates the corresponding
+interactive widgets:
 
 * ``bool``: Radio Items
 * ``str``: Input field
@@ -20,54 +20,69 @@ interactive components:
   function.
 * ``dash.development.base_component.Component``: custom dash component
   Any dash component will be used as-is. This allows full customization of a
-  component if desired. The components ``value`` will be used as argument to
+  widget if desired. The widgets ``value`` will be used as argument to
   the callback function.
 
 """
 
+from abc import ABC
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from collections.abc import Iterable, Mapping
 from numbers import Real, Integral
 from collections import OrderedDict
 from dash.development.base_component import Component
-from dasher.base import DasherComponent
-from dasher.components import DashComponent
+from dasher.base import DasherWidget, DasherWidgetPassthroughMixin
 from .min_max_value import get_min_max_value
 
 
-class BoolComponent(DasherComponent):
+class DasherBootstrapWidget(DasherWidget, ABC):
+    @property
+    def layout(self):
+        return dbc.FormGroup(
+            [dbc.Label(self.label, html_for=self.name), self.component]
+        )
+
+
+class PassthroughWidget(DasherBootstrapWidget, DasherWidgetPassthroughMixin):
+    """ Passthrough for custom dash components. """
+    pass
+
+
+class BoolWidget(DasherBootstrapWidget):
     """ RadioItems component used for booleans. """
 
-    def __init__(self, name, x, dependency="checked"):
-        super().__init__(name, x, dependency)
+    def __init__(self, name, x, label=None, dependency="checked"):
+        super().__init__(name, x, label, dependency)
+
+    @property
+    def component(self):
+        return dbc.Checkbox(id=self.name, className="form-check-input")
 
     @property
     def layout(self):
-        return dbc.Checkbox(id=self.name, className="custom-switch")
-        # return dbc.RadioItems(
-        #     id=self.name,
-        #     options=[
-        #         {"label": "True", "value": True},
-        #         {"label": "False", "value": False},
-        #     ],
-        #     value=self.x,
-        # )
+        return dbc.FormGroup(
+            [
+                self.component,
+                dbc.Label(self.label, html_for=self.name, className="form-check-label"),
+            ],
+            check=True,
+        )
 
 
-class StringComponent(DasherComponent):
+class StringWidget(DasherBootstrapWidget):
     """ Input field component used for for strings. """
 
     @property
-    def layout(self):
+    def component(self):
         return dbc.Input(id=self.name, type="text", value=self.x)
 
 
-class IterableComponent(DasherComponent):
+class IterableWidget(DasherBootstrapWidget):
     """ Dropdown component used for iterables and mappings. """
 
     @property
-    def layout(self):
+    def component(self):
         if isinstance(self.x, Mapping):
             options = [{"label": k, "value": v} for k, v in self.x.items()]
         else:
@@ -84,10 +99,18 @@ class IterableComponent(DasherComponent):
             return None
 
 
-class TupleComponent(DasherComponent):
+class TupleWidget(DasherBootstrapWidget):
     """ Slider components used for tuples of numbers. """
 
-    def __init__(self, name, x, slider_max_ticks=8, slider_float_steps=60):
+    def __init__(
+        self,
+        name,
+        x,
+        label=None,
+        dependency="value",
+        slider_max_ticks=8,
+        slider_float_steps=60,
+    ):
         """
         Parameters
         ----------
@@ -95,17 +118,21 @@ class TupleComponent(DasherComponent):
             Name of the component.
         x: tuple of int or float
             Tuple used to configure the slider.
+        label: str, optional
+            A label for the component.
+        dependency: str, optional
+            Property to use for the input dependency.
         slider_max_ticks: int, default 8
             Maximum number of ticks to draw for the slider.
         slider_float_steps: int, default 60
             Number of float steps to use if step is not defined explicity.
         """
-        super().__init__(name, x)
+        super().__init__(name, x, label, dependency)
         self.slider_max_marks = slider_max_ticks
         self.slider_float_steps = slider_float_steps
 
     @property
-    def layout(self):
+    def component(self):
         step = None
 
         if len(self.x) == 1:
@@ -141,21 +168,21 @@ class TupleComponent(DasherComponent):
         )
 
 
-class NumberComponent(TupleComponent):
-    """ Component used for numbers. """
+class NumberWidget(TupleWidget):
+    """ Widget used for numbers. """
 
-    def __init__(self, name, x):
-        super().__init__(name, (x,))
+    def __init__(self, name, x, label=None, dependency="value"):
+        super().__init__(name, (x,), label, dependency)
 
 
-COMPONENTS = OrderedDict(
+WIDGET_SPEC = OrderedDict(
     [
-        (Component, DashComponent),
-        (bool, BoolComponent),
-        (str, StringComponent),
-        ((Real, Integral), NumberComponent),
-        (tuple, TupleComponent),
-        (Iterable, IterableComponent),
+        (Component, PassthroughWidget),
+        (bool, BoolWidget),
+        (str, StringWidget),
+        ((Real, Integral), NumberWidget),
+        (tuple, TupleWidget),
+        (Iterable, IterableWidget),
     ]
 )
-""" Component specification. """
+""" Widget specification. """
