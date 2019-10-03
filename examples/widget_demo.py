@@ -8,7 +8,7 @@ app = Dasher(__name__, title="Widget Demo")
 
 @app.callback(
     "All widgets",
-    "Demo of all supported automatic widgets and one custom layout",
+    "Demo of all supported widgets",
     _labels={
         "boolean": "bool",
         "string": "str",

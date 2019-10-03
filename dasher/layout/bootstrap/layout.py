@@ -1,11 +1,11 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from dasher.base import DasherLayout
 from dash.dependencies import Input, Output
+from dasher.base import BaseLayout
 from .widgets import WIDGET_SPEC
 
 
-class DasherBootstrapLayout(DasherLayout):
+class BootstrapLayout(BaseLayout):
     """ Dasher boostrap layout.
     This layout utilizes ``dash_bootstrap_components`` to build the app layout.
 
@@ -117,7 +117,21 @@ class DasherBootstrapLayout(DasherLayout):
             yield l[i : i + n]
 
     def render_card(self, callback, **kwargs):
-        """ Renders a card with the interactive components and the output container. """
+        """ Renders a card with the interactive components and the output container.
+
+        Parameters
+        ----------
+        callback: dasher.base.Callback
+            The callback to render the card for.
+
+        **kwargs:
+             Keyword arguments to override default layout settings.
+
+        Returns
+        -------
+        dash_bootstrap_components.Card
+            Layout of the card.
+        """
         widget_cols = kwargs.get("widget_cols", self.widget_cols)
 
         cols = [dbc.Col(w.layout) for w in callback.widgets]
@@ -137,6 +151,7 @@ class DasherBootstrapLayout(DasherLayout):
 
     def add_callback(self, callback, app, **kwargs):
         """ Add callback to the layout.
+
         Parameters
         ----------
         callback: DasherCallback
@@ -172,5 +187,16 @@ class DasherBootstrapLayout(DasherLayout):
         callback.layout = content
 
     def render_callback(self, name):
-        """ Callback method used to switch between tabs. """
+        """ Callback method to switch between tabs.
+
+        Parameters
+        ----------
+        name: str
+            Name of the callback to render.
+
+        Returns
+        -------
+        dash.development.base_component.Component
+            Layout of the callback.
+        """
         return self.callbacks[name].layout

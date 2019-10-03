@@ -26,17 +26,21 @@ interactive widgets:
 """
 
 from abc import ABC
+from dash.development.base_component import Component
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 from collections.abc import Iterable, Mapping
 from numbers import Real, Integral
 from collections import OrderedDict
-from dash.development.base_component import Component
-from dasher.base import DasherWidget, DasherWidgetPassthroughMixin
+from dasher.base import BaseWidget, WidgetPassthroughMixin
 from .min_max_value import get_min_max_value
 
 
-class DasherBootstrapWidget(DasherWidget, ABC):
+class BootstrapWidget(BaseWidget, ABC):
+    """ Abstract base class for Bootstrap widgets.
+    Implements the default layout property, which is used by most the widgets.
+    """
+
     @property
     def layout(self):
         return dbc.FormGroup(
@@ -44,15 +48,29 @@ class DasherBootstrapWidget(DasherWidget, ABC):
         )
 
 
-class PassthroughWidget(DasherBootstrapWidget, DasherWidgetPassthroughMixin):
+class PassthroughWidget(BootstrapWidget, WidgetPassthroughMixin):
     """ Passthrough for custom dash components. """
+
     pass
 
 
-class BoolWidget(DasherBootstrapWidget):
+class BoolWidget(BootstrapWidget):
     """ RadioItems component used for booleans. """
 
     def __init__(self, name, x, label=None, dependency="checked"):
+        """
+        Parameters
+        ----------
+        name: str
+            Name of the widget.
+        x: tuple of int or float
+            Tuple used to configure the slider.
+        label: str, optional
+            The label for the component.
+        dependency: str, optional
+            The attribute used for the ``dash.Input`` dependency. Default: "checked".
+        """
+
         super().__init__(name, x, label, dependency)
 
     @property
@@ -70,7 +88,7 @@ class BoolWidget(DasherBootstrapWidget):
         )
 
 
-class StringWidget(DasherBootstrapWidget):
+class StringWidget(BootstrapWidget):
     """ Input field component used for for strings. """
 
     @property
@@ -78,7 +96,7 @@ class StringWidget(DasherBootstrapWidget):
         return dbc.Input(id=self.name, type="text", value=self.x)
 
 
-class IterableWidget(DasherBootstrapWidget):
+class IterableWidget(BootstrapWidget):
     """ Dropdown component used for iterables and mappings. """
 
     @property
@@ -99,7 +117,7 @@ class IterableWidget(DasherBootstrapWidget):
             return None
 
 
-class TupleWidget(DasherBootstrapWidget):
+class TupleWidget(BootstrapWidget):
     """ Slider components used for tuples of numbers. """
 
     def __init__(
@@ -115,13 +133,13 @@ class TupleWidget(DasherBootstrapWidget):
         Parameters
         ----------
         name: str
-            Name of the component.
+            Name of the widget.
         x: tuple of int or float
             Tuple used to configure the slider.
         label: str, optional
-            A label for the component.
+            The label for the component.
         dependency: str, optional
-            Property to use for the input dependency.
+            The attribute used for the ``dash.Input`` dependency. Default: "value".
         slider_max_ticks: int, default 8
             Maximum number of ticks to draw for the slider.
         slider_float_steps: int, default 60

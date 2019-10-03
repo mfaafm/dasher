@@ -1,9 +1,9 @@
 from collections.abc import Sequence, Mapping
 from dash.dependencies import Input, Output
-from dasher.base import DasherWidget, DasherLayout
+from dasher.base import BaseWidget, BaseLayout
 
 
-class DasherApi(object):
+class Api(object):
     """ Dasher api.
     The api allows generation of components, widgets and dash dependencies (for
     ``DasherCallback``s). It is used by ``Dasher`` to generate interactive apps.
@@ -27,10 +27,10 @@ class DasherApi(object):
     @staticmethod
     def _load_layout(layout):
         if layout == "bootstrap":
-            from dasher.layout.bootstrap import DasherBootstrapLayout
+            from dasher.layout.bootstrap import BootstrapLayout
 
-            return DasherBootstrapLayout
-        elif issubclass(layout, DasherLayout):
+            return BootstrapLayout
+        elif issubclass(layout, BaseLayout):
             return layout
         else:
             msg = "layout must be either a named layout or a subclass of DasherLayout"
@@ -54,7 +54,7 @@ class DasherApi(object):
 
         Returns
         -------
-        DasherWidget
+        BaseWidget
             Generated dasher widget.
 
         See Also
@@ -161,7 +161,7 @@ class DasherApi(object):
 
         Parameters
         ----------
-        widgets: list of DasherWidget
+        widgets: list of BaseWidget
             List of dasher widgets to generate dependencies for.
         output_id: str
             Id of the output.
