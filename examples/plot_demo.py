@@ -1,43 +1,30 @@
-import pandas as pd
-import numpy as np
 from dasher import Dasher
 import dash_core_components as dcc
 import plotly.graph_objs as go
 
 app = Dasher(__name__, title="Interactive plotting demo")
 
-
-df = pd.DataFrame(
-    {
-        "x": np.arange(3),
-        "a": np.arange(1, 4),
-        "b": np.array([2, -2, 12]),
-        "c": np.array([10, 0, -10]),
-    }
-)
+index = [1, 2, 3]
+data = {"a": [1, 2, 3], "b": [2, -2, 6], "c": [10, 0, -10]}
 
 
 @app.callback(
-    "Line plot",
-    _desc="Try it out!",
-    _labels=["y-Axis column"],
-    column=df.columns.drop("x"),
+    "Line plot", _desc="Try it out!", _labels=["y-Axis column"], column=data.keys()
 )
 def line_plot(column):
-    return [dcc.Graph(figure={"data": [{"x": df.x, "y": df[column]}]})]
+    return [dcc.Graph(figure={"data": [{"x": index, "y": data[column]}]})]
 
 
-@app.callback("Bar plot", column=df.columns.drop("x"))
+@app.callback("Bar plot", column=data.keys())
 def bar_plot(column):
     return [
         dcc.Graph(
             figure={
                 "data": [
                     go.Bar(
-                        x=df.x,
-                        y=df[column],
+                        x=index,
+                        y=data[column],
                         name="bars",
-                        marker=go.bar.Marker(color="rgb(55, 83, 109)"),
                     )
                 ]
             }
