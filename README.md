@@ -44,7 +44,7 @@ in jupyter notebooks. That is, by decorating a user defined callback function! H
 the keyword arguments of the decorator define the interactive widgets and the callback 
 function must return what you want to show in the content container in the dashboard. 
 
-Dasher provides a simple default layout consisting of a header with the dashboard's 
+Dasher automatically renders a layout consisting of a header with the dashboard's 
 title, a widget container providing the interactivity and the content container. 
 The only thing you need to do in the callback function is to process the input arguments
 (which correspond to the widgets) and to return a list of the plotly dash components 
@@ -64,24 +64,24 @@ generating a stunning interactive visualization becomes a matter of minutes!
 The type of a keyword argument of the ``callback`` decorator determines which widget
 will be generated. All supported types and the resulting widget (dash component) 
 are:
-* ``bool``: Radio item (``dash_bootstrap_components.RadioItem``)
-* ``str``: Input field (``dash_bootstrap_components.Input``)
-* ``int``: Slider, integer (``dash_core_components.Slider``)
-* ``float``: Slider, float (``dash_core_components.Slider``)
-* ``tuple``: Slider, (``dash_core_components.Slider``)  
-    Can be ``(min, max)`` or ``(min, max, step)``. The type of all the tuple entries
-    must either be ``int`` or ``float``, which determines whether an integer or
-    float slider will be generated.
-* ``collections.Iterable``: Dropdown menu (``dash_core_components.Dropdown``)  
-    Typically a ``list`` or anything iterable, which is not a ``tuple``.
-* ``collections.Mapping``: Dropdown menu (``dash_core_components.Dropdown``)  
-    Typically a ``dict``. A mapping will use the keys as labels shown in the
-    dropdown menu, while the values will be used as arguments to the callback
-    function.
-* ``dash.development.base_component.Component``: custom dash component  
-    Any dash component will be used as-is. This allows full
-    customization of a widget if desired. The components ``value`` will be used
-    as argument of the callback function.
+* ``bool``: Radio Items
+* ``str``: Input field
+* ``int``: Slider, integer
+* ``float``: Slider, floats
+* ``tuple``: Slider
+  Can be (min, max) or (min, max, step). The type of all the tuple entries
+  must either be ``int`` or ``float``, which determines whether an integer or
+  float slider will be generated.
+* ``collections.Iterable``: Dropdown menu
+  Typically a ``list`` or anything iterable.
+* ``collections.Mapping``: Dropdown menu
+  Typically a ``dict``. A mapping will use the keys as labels shown in the
+  dropdown menu, while the values will be used as arguments to the callback
+  function.
+* ``dash.development.base_component.Component``: custom dash component
+  Any dash component will be used as-is. This allows full customization of a
+  widget if desired. The widgets ``value`` will be used as argument to
+  the callback function.
 
 ### Multiple callbacks
 ``dasher`` supports multiple callbacks and will autmatically create multiple tabs
