@@ -5,7 +5,7 @@ from dasher.base import BaseWidget, BaseLayout
 
 class Api(object):
     """ Dasher api.
-    The api allows generation of components, widgets and dash dependencies (for
+    The api allows generation of widgets and dash dependencies (for
     ``DasherCallback``s). It is used by ``Dasher`` to generate interactive apps.
     """
 
@@ -46,7 +46,7 @@ class Api(object):
         Parameters
         ----------
         name: str
-            Name of the component.
+            Name of the widget.
         x: object of supported type
             Object used to determine which interactive component is returned.
         label: str or None, optional
@@ -54,13 +54,13 @@ class Api(object):
 
         Returns
         -------
-        BaseWidget
+        dasher.base.BaseWidget
             Generated dasher widget.
 
         See Also
         --------
-        get_widget: Generates styled and labeled widget and returns a dash component.
-        get_component: Generates un-styled and un-labeled dash component.
+        get_widget: Generates widget and directly returns the ``layout`` of the widget.
+        get_component: Generates widget and returns the widgets' ``component``.
         """
         for type_spec, component_cls in self.layout.widget_spec.items():
             if isinstance(x, type_spec):
@@ -91,7 +91,7 @@ class Api(object):
     def get_widget(self, name, x, label=None):
         """ Generate a styled and labeled interactive dash component. This is a
         convenience method, which first calls the ``generate_widget`` method and then
-        directly returns a dash component.
+        directly returns the ``layout`` of the widget.
 
         Parameters
         ----------
@@ -141,7 +141,7 @@ class Api(object):
 
         Returns
         -------
-        list of DasherWidget
+        list of dasher.base.BaseWidget
             List of generated dasher widgets.
         """
         labels = self._create_labels_dict(labels, kw)
@@ -181,7 +181,7 @@ class Api(object):
 
     @staticmethod
     def register_callback(app, callback):
-        """ Register a dasher callback with dependencies to the dash app.
+        """ Register a dasher callback with dependencies in the dash app.
 
         Parameters
         ----------

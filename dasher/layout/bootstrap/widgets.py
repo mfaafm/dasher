@@ -68,7 +68,8 @@ class BoolWidget(BootstrapWidget):
         label: str, optional
             The label for the component.
         dependency: str, optional
-            The attribute used for the ``dash.Input`` dependency. Default: "checked".
+            The attribute used for the ``dash.dependencies.Input`` dependency.
+            Default: "checked".
         """
 
         super().__init__(name, x, label, dependency)
@@ -139,7 +140,8 @@ class TupleWidget(BootstrapWidget):
         label: str, optional
             The label for the component.
         dependency: str, optional
-            The attribute used for the ``dash.Input`` dependency. Default: "value".
+            The attribute used for the ``dash.dependencies.Input`` dependency.
+            Default: "value".
         slider_max_ticks: int, default 8
             Maximum number of ticks to draw for the slider.
         slider_float_steps: int, default 60

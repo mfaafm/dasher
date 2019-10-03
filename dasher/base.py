@@ -20,7 +20,8 @@ class BaseWidget(ABC):
     layout: dash.development.base_component.Component
         The `layout` is a styled and labeled version of `component`.
     dependency: str, optional
-        The attribute used for the ``dash.Input`` dependency. Default: "value".
+        The attribute used for the ``dash.dependencies.Input`` dependency.
+        Default: "value".
     """
     def __init__(self, name, x, label=None, dependecy="value"):
         """
