@@ -75,7 +75,7 @@ class BoolWidget(BootstrapWidget):
 
     @property
     def component(self):
-        return dbc.Checkbox(id=self.name, className="form-check-input")
+        return dbc.Checkbox(id=self.name, checked=False, className="form-check-input")
 
     @property
     def layout(self):
