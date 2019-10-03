@@ -59,7 +59,7 @@ class Api(object):
 
         See Also
         --------
-        get_widget: Generates widget and directly returns the ``layout`` of the widget.
+        get_widget: Generates widget and returns the ``layout`` of the widget.
         get_component: Generates widget and returns the widgets' ``component``.
         """
         for type_spec, component_cls in self.layout.widget_spec.items():
@@ -70,9 +70,10 @@ class Api(object):
         )
 
     def get_component(self, name, x):
-        """ Generate an interactive dash component. This is a convenience method, which
-        first calls the ``generate_widget`` method and then directly returns the
-        un-styled and un-labeled dash component.
+        """ Generate an interactive dash component.
+        This is a convenience method, which first calls the ``generate_widget`` method
+        and then directly returns the un-styled and un-labeled ``component`` of the
+        widget.
 
         Parameters
         ----------
@@ -89,9 +90,9 @@ class Api(object):
         return self.generate_widget(name, x, None).component
 
     def get_widget(self, name, x, label=None):
-        """ Generate a styled and labeled interactive dash component. This is a
-        convenience method, which first calls the ``generate_widget`` method and then
-        directly returns the ``layout`` of the widget.
+        """ Generate a styled and labeled interactive dash component.
+        This is a convenience method, which first calls the ``generate_widget`` method
+        and then directly returns the ``layout`` of the widget.
 
         Parameters
         ----------
@@ -143,6 +144,11 @@ class Api(object):
         -------
         list of dasher.base.BaseWidget
             List of generated dasher widgets.
+
+        See Also
+        --------
+        get_widgets: Generates widgets and returns the ``layout`` of the widgets.
+        get_components: Generates widgets and returns the ``component`` of the widgets.
         """
         labels = self._create_labels_dict(labels, kw)
         return [
@@ -151,6 +157,62 @@ class Api(object):
             )
             for name, x in kw.items()
         ]
+
+    def get_widgets(self, kw, labels=None, group=None):
+        """ Generate interactive widgets based on a dictionary.
+        This is a convenience method, which first calls the ``generate_widgets`` method
+        and then directly returns a list containing the ``layout`` of the widgets.
+
+        Parameters
+        ----------
+        kw: dict
+            The keys of the dictionary define the names of the widgets and the type of
+            the values is used to determine the type of the interactive widgets based on
+            the selected component specification.
+        labels: list or dict, optional
+            Labels for the widgets. May be either a list of labels for `kw` in the order
+            of appearance or a dictionary mapping the keys of `kw` to the desired
+            labels. If ``None``, the keys of `kw` are used for the labels directly.
+        group: str, optional
+            If not ``None``, `group` will be used as a suffix for each
+            component / widget name in order to group widgets.
+
+        Returns
+        -------
+        list of dash.development.base_component.Component
+            List of generated interactive components.
+        """
+        widgets = self.generate_widgets(kw, labels, group)
+        return [w.layout for w in widgets]
+
+    def get_components(self, kw, labels=None, group=None):
+        """ Generate interactive components based on a dictionary.
+        This is a convenience method, which first calls the ``generate_widgets`` method
+        and then directly returns a list containing the un-styled and un-labeled
+        ``component`` of the widgets.
+
+        Parameters
+        ----------
+        kw: dict
+            The keys of the dictionary define the names of the widgets and the type of
+            the values is used to determine the type of the interactive widgets based on
+            the selected component specification.
+        labels: list or dict, optional
+            Labels for the widgets. May be either a list of labels for `kw` in the order
+            of appearance or a dictionary mapping the keys of `kw` to the desired
+            labels. If ``None``, the keys of `kw` are used for the labels directly.
+        group: str, optional
+            If not ``None``, `group` will be used as a suffix for each
+            component / widget name in order to group widgets.
+
+        Returns
+        -------
+        list of dash.development.base_component.Component
+            List of generated interactive components.
+
+        """
+        widgets = self.generate_widgets(kw, labels, group)
+        return [w.component for w in widgets]
 
     @staticmethod
     def generate_dependencies(widgets, output_id, output_dependency="children"):
