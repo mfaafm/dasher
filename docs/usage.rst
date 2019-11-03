@@ -103,7 +103,7 @@ dasher has many options for customizations, including:
 * layout options on a callback level
 * customization of the widget specification
 
-Refer to the `reference` for details or have a look at the customization example in
+Refer to the :doc:`/reference/index` for details or have a look at the customization example in
 ``examples/customization_example.py``, which shows some of the possible customizations.
 
 Dasher API
