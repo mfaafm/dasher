@@ -1,4 +1,4 @@
-""" Module containing the widget specification and implementation of the interactive
+""" Widget specification and implementation of the interactive
 dasher widgets based on ``dash_bootstrap_components``.
 
 The widget specification supports the following types and generates the corresponding
@@ -55,23 +55,22 @@ class PassthroughWidget(BootstrapWidget, WidgetPassthroughMixin):
 
 
 class BoolWidget(BootstrapWidget):
-    """ RadioItems component used for booleans. """
+    """ RadioItems component used for booleans.
+
+    Parameters
+    ----------
+    name: str
+        Name of the widget.
+    x: tuple of int or float
+        Tuple used to configure the slider.
+    label: str, optional
+        The label for the component.
+    dependency: str, optional
+        The attribute used for the ``dash.dependencies.Input`` dependency.
+        Default: "checked".
+    """
 
     def __init__(self, name, x, label=None, dependency="checked"):
-        """
-        Parameters
-        ----------
-        name: str
-            Name of the widget.
-        x: tuple of int or float
-            Tuple used to configure the slider.
-        label: str, optional
-            The label for the component.
-        dependency: str, optional
-            The attribute used for the ``dash.dependencies.Input`` dependency.
-            Default: "checked".
-        """
-
         super().__init__(name, x, label, dependency)
 
     @property
@@ -119,7 +118,24 @@ class IterableWidget(BootstrapWidget):
 
 
 class TupleWidget(BootstrapWidget):
-    """ Slider components used for tuples of numbers. """
+    """ Slider components used for tuples of numbers.
+
+    Parameters
+    ----------
+    name: str
+        Name of the widget.
+    x: tuple of int or float
+        Tuple used to configure the slider.
+    label: str, optional
+        The label for the component.
+    dependency: str, optional
+        The attribute used for the ``dash.dependencies.Input`` dependency.
+        Default: "value".
+    slider_max_ticks: int, default 8
+        Maximum number of ticks to draw for the slider.
+    slider_float_steps: int, default 60
+        Number of float steps to use if step is not defined explicity.
+    """
 
     def __init__(
         self,
@@ -130,23 +146,6 @@ class TupleWidget(BootstrapWidget):
         slider_max_ticks=8,
         slider_float_steps=60,
     ):
-        """
-        Parameters
-        ----------
-        name: str
-            Name of the widget.
-        x: tuple of int or float
-            Tuple used to configure the slider.
-        label: str, optional
-            The label for the component.
-        dependency: str, optional
-            The attribute used for the ``dash.dependencies.Input`` dependency.
-            Default: "value".
-        slider_max_ticks: int, default 8
-            Maximum number of ticks to draw for the slider.
-        slider_float_steps: int, default 60
-            Number of float steps to use if step is not defined explicity.
-        """
         super().__init__(name, x, label, dependency)
         self.slider_max_marks = slider_max_ticks
         self.slider_float_steps = slider_float_steps

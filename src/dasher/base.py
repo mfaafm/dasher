@@ -7,6 +7,20 @@ class BaseWidget(ABC):
     A dasher widget is an interactive control, which consists of an interactive dash
     `component`, a `label` and a final `layout`.
 
+    Parameters
+    ----------
+    name: str
+        Name of the widget.
+    x: object
+        The object, whose type determines the type of the widget.
+    label: str
+        The label for the dash component.
+    layout: dash.development.base_component.Component
+        The `layout` is a styled and labeled version of `component`.
+    dependency: str, optional
+        The attribute used for the ``dash.dependencies.Input`` dependency.
+        Default: "value".
+
     Attributes
     ----------
     name: str
@@ -25,21 +39,6 @@ class BaseWidget(ABC):
     """
 
     def __init__(self, name, x, label=None, dependecy="value"):
-        """
-        Parameters
-        ----------
-        name: str
-            Name of the widget.
-        x: object
-            The object, whose type determines the type of the widget.
-        label: str
-            The label for the dash component.
-        layout: dash.development.base_component.Component
-            The `layout` is a styled and labeled version of `component`.
-        dependency: str, optional
-            The attribute used for the ``dash.dependencies.Input`` dependency.
-            Default: "value".
-        """
         self.name = name
         self.x = x
         self.label = label if label is not None else name
@@ -100,6 +99,15 @@ class BaseLayout(ABC):
     the child class must announce this by creating an `external_stylesheets` attribute
     containing the list of required external stylesheets.
 
+    Parameters
+    ----------
+    title: str
+        Title of the dash app.
+    widget_spec: OrderedDict
+        Widget specification used to determine the types of the interactive widgets.
+    credits: bool
+        If true, dasher / layout credits are shown in the app.
+
     Attributes
     ----------
     title: str
@@ -113,16 +121,6 @@ class BaseLayout(ABC):
     output_base = "dasher-output"
 
     def __init__(self, title, widget_spec, credits=True):
-        """
-        Parameters
-        ----------
-        title: str
-            Title of the dash app.
-        widget_spec: OrderedDict
-            Widget specification used to determine the types of the interactive widgets.
-        credits: bool
-            If true, dasher / layout credits are shown in the app.
-        """
         if title is None:
             self.title = "Dasher app"
         else:
@@ -157,6 +155,27 @@ class BaseLayout(ABC):
 class Callback(object):
     """ This class contains the specification of a callback.
 
+    Parameters
+    ----------
+    name: str
+        Name of the callback.
+    description: str or None
+        Additional description of the callback.
+    f: callable
+        The callback function itself.
+    kw: dict
+        The keyword arguments passed to the ``callback`` decorator.
+    labels: list or dict or None
+        Labels for the widgets.
+    widgets: list of BaseWidget
+        Generated dasher widgets for the callback.
+    outputs: dash.dependencies.Output or list of dash.dependencies.Output
+        Output dependencies for the callback
+    inputs: list of dash.dependencies.Input
+        Input dependencies for the callback
+    layout_kw: dict or None
+        Keyword arguments to override default layout settings for the callback.
+
     Attributes
     ----------
     name: str
@@ -182,28 +201,6 @@ class Callback(object):
     def __init__(
         self, name, description, f, kw, labels, widgets, outputs, inputs, layout_kw
     ):
-        """
-        Parameters
-        ----------
-        name: str
-            Name of the callback.
-        description: str or None
-            Additional description of the callback.
-        f: callable
-            The callback function itself.
-        kw: dict
-            The keyword arguments passed to the ``callback`` decorator.
-        labels: list or dict or None
-            Labels for the widgets.
-        widgets: list of BaseWidget
-            Generated dasher widgets for the callback.
-        outputs: dash.dependencies.Output or list of dash.dependencies.Output
-            Output dependencies for the callback
-        inputs: list of dash.dependencies.Input
-            Input dependencies for the callback
-        layout_kw: dict or None
-            Keyword arguments to override default layout settings for the callback.
-        """
         self.name = name
         self.description = description
         self.f = f

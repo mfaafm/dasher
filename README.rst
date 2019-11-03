@@ -2,6 +2,9 @@
 Overview
 ========
 
+**dasher**: Generate interactive plotly dash dashboards in an instant
+
+
 .. start-badges
 
 .. list-table::
@@ -51,9 +54,6 @@ Overview
 
 .. end-badges
 
-Generate interactive plotly dash dashboards in an instant
-
-* Free software: MIT license
 
 Installation
 ============
@@ -67,12 +67,52 @@ You can also install the in-development version with::
     pip install https://github.com/mfaafm/dasher/archive/master.zip
 
 
+First steps
+===========
+Creating a simple, interactive dashboard with a nice layout is as easy as this::
+
+    from dasher import Dasher
+    import dash_html_components as html
+
+    app = Dasher(__name__, title="My first dashboard")
+
+
+    @app.callback(
+        _name="My first callback",
+        _desc="Try out the widgets!",
+        _labels=["Greeting", "Place"],
+        text="Hello",
+        place=["World", "Universe"],
+    )
+    def my_callback(text, place):
+        msg = "{} {}!".format(text, place)
+        return [html.H1(msg)]
+
+
+    if __name__ == "__main__":
+        app.run_server(debug=True)
+
+
+
+
+The resulting dashboard looks like this:
+
+.. image:: https://raw.githubusercontent.com/mfaafm/dasher/v0.2.0/docs/images/hello_world.gif
+    :alt: hello world example
+    :align: center
+
+The code for this dashboard can be found in ``examples/readme_example.py``.
+
 Documentation
 =============
+To view the full project documentation, visit https://dasher.readthedocs.io/.
 
+License
+=======
 
-https://dasher.readthedocs.io/
+Free software, `MIT License`_
 
+.. _`MIT License`: https://raw.githubusercontent.com/mfaafm/dasher/v0.2.0/LICENSE
 
 Development
 ===========

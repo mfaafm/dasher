@@ -4,4 +4,7 @@ Reference
 .. toctree::
     :glob:
 
-    dasher*
+    dasher
+    api
+    layouts
+    base

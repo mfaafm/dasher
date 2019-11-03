@@ -6,20 +6,20 @@ from dasher.base import BaseWidget, BaseLayout
 class Api(object):
     """ Dasher api.
     The api allows generation of widgets and dash dependencies (for
-    ``DasherCallback``s). It is used by ``Dasher`` to generate interactive apps.
+    instances of ``DasherCallback``). It is used by ``Dasher`` to generate interactive
+    apps.
+
+    Parameters
+    ----------
+    title: str, optional
+        Title of the app.
+    layout: str or DasherLayout subclass, optional
+        Name of a built-in layout or custom layout (DasherLayout subclass)
+    layout_kw: dict, optional
+        Dictionary of keyword arguments passed to the `layout` class.
     """
 
     def __init__(self, title=None, layout="bootstrap", layout_kw=None):
-        """
-        Parameters
-        ----------
-        title: str, optional
-            Title of the app.
-        layout: str or DasherLayout subclass, optional
-            Name of a built-in layout or custom layout (DasherLayout subclass)
-        layout_kw: dict, optional
-            Dictionary of keyword arguments passed to the `layout` class.
-        """
         if layout_kw is None:
             layout_kw = {}
         self.layout = self._load_layout(layout)(title, **layout_kw)

@@ -13,6 +13,19 @@ class Dasher(object):
     widgets are determined based on the types of the keyword arguments (compatible to
     the ``ipywidgets.interact`` decorator).
 
+    Parameters
+    ----------
+    name: str
+        Name of the app, typically `__name__`.
+    title: str, optional
+        Title of the app.
+    layout: str or DasherLayout subclass, optional
+        Name of a built-in layout or custom layout (DasherLayout subclass)
+    layout_kw: dict, optional
+        Dictionary of keyword arguments passed to the `layout` class.
+    dash_kw: dict, optional
+        Dictionary of keyword arguments passed to the dash app.
+
     Attributes
     ----------
     api: dasher.Api
@@ -24,28 +37,8 @@ class Dasher(object):
     """
 
     def __init__(
-        self,
-        name,
-        title=None,
-        layout="bootstrap",
-        layout_kw=None,
-        dash_kw=None,
+        self, name, title=None, layout="bootstrap", layout_kw=None, dash_kw=None
     ):
-        """
-        Parameters
-        ----------
-        name: str
-            Name of the app, typically `__name__`.
-        title: str, optional
-            Title of the app.
-        layout: str or DasherLayout subclass, optional
-            Name of a built-in layout or custom layout (DasherLayout subclass)
-        layout_kw: dict, optional
-            Dictionary of keyword arguments passed to the `layout` class.
-        dash_kw: dict, optional
-            Dictionary of keyword arguments passed to the dash app.
-        """
-
         self.api = Api(title, layout, layout_kw)
 
         if dash_kw is None:

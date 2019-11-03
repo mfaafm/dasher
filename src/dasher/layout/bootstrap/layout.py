@@ -9,6 +9,23 @@ class BootstrapLayout(BaseLayout):
     """ Dasher boostrap layout.
     This layout utilizes ``dash_bootstrap_components`` to build the app layout.
 
+    Parameters
+    ----------
+    title: str
+        Title of the app.
+    widget_spec: OrderedDict, optional
+        Widget specification.
+        Default: ``dasher.layout.bootstrap.widgets.WIDGET_SPEC``.
+    credits: bool, optional
+        If true, shows a link to dasher's github page in the navigation bar.
+        Default: True.
+    include_stylesheets: bool, optional
+        If true, includes the standard bootstrap theme as external stylesheets. Set
+        it to false to use a customized bootstrap theme. Default: True.
+    widget_cols: int, optional
+        Group the interactive components into ``widget_cols`` number of columns.
+        Default: 2.
+
     Attributes
     ----------
     widget_cols: int
@@ -48,24 +65,6 @@ class BootstrapLayout(BaseLayout):
         include_stylesheets=True,
         widget_cols=2,
     ):
-        """
-        Parameters
-        ----------
-        title: str
-            Title of the app.
-        widget_spec: OrderedDict, optional
-            Widget specification.
-            Default: ``dasher.layout.bootstrap.widgets.WIDGET_SPEC``.
-        credits: bool, optional
-            If true, shows a link to dasher's github page in the navigation bar.
-            Default: True.
-        include_stylesheets: bool, optional
-            If true, includes the standard bootstrap theme as external stylesheets. Set
-            it to false to use a customized bootstrap theme. Default: True.
-        widget_cols: int, optional
-            Group the interactive components into ``widget_cols`` number of columns.
-            Default: 2.
-        """
         super().__init__(title, widget_spec, credits)
 
         if widget_cols < 1:

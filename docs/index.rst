@@ -7,6 +7,7 @@ Contents
 
    readme
    installation
+   concept
    usage
    reference/index
    contributing

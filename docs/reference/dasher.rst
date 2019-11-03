@@ -1,9 +1,9 @@
-dasher
+Dasher
 ======
 
 .. testsetup::
 
-    from dasher import *
+    from dasher import Dasher
 
-.. automodule:: dasher
+.. autoclass:: dasher.Dasher
     :members:
