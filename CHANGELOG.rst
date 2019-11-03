@@ -1,10 +1,15 @@
-
 Changelog
 =========
 
 0.2.0 (2019-11-03)
 ------------------
-
+* Use cookiecutter to create a proper project structure.
+* Refactor core functionality into ``dasher.Api``.
+* Combine widget factory and template logic into unified layout implementation.
+* Fix resizing bug when switching tabs by using callback-based tab switching.
+* Add support of fully custom widgets.
+* Add documentation.
+* Add more examples.
 
 0.1.2 (2019-07-16)
 ------------------
