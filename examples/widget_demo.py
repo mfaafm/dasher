@@ -1,14 +1,15 @@
-from dasher import Dasher
-import dash_html_components as html
-import dash_core_components as dcc
 import dash_bootstrap_components as dbc
+import dash_core_components as dcc
+import dash_html_components as html
+
+from dasher import Dasher
 
 app = Dasher(__name__, title="Widget Demo")
 
 
 @app.callback(
     "All widgets",
-    "Demo of all supported automatic widgets and one custom component",
+    "Demo of all supported widgets",
     _labels={
         "boolean": "bool",
         "string": "str",
@@ -20,7 +21,7 @@ app = Dasher(__name__, title="Widget Demo")
         "floating": "float",
         "tuple_float_2": "float 2-tuple",
         "tuple_float_3": "float 3-tuple",
-        "custom_component": "Custom dash component"
+        "custom_component": "Custom dash layout",
     },
     boolean=True,
     string="Test",

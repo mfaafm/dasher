@@ -28,44 +28,44 @@
 from numbers import Real
 
 
-def get_min_max_value(minimum, maximum, value=None, step=None):
-    """Return min, max, value given input values with possible None."""
-    # Either min and max need to be given, or value needs to be given
-    if value is None:
-        if minimum is None or maximum is None:
+def get_min_max_value(min, max, x=None, step=None):
+    """Return min, max, x given input values with possible None."""
+    # Either min and max need to be given, or x needs to be given
+    if x is None:
+        if min is None or max is None:
             raise ValueError(
-                "unable to infer range, value from: ({0}, {1}, {2})".format(
-                    minimum, maximum, value
+                "unable to infer range, x from: ({0}, {1}, {2})".format(
+                    min, max, x
                 )
             )
-        diff = maximum - minimum
-        value = minimum + (diff / 2)
-        # Ensure that value has the same type as diff
-        if not isinstance(value, type(diff)):
-            value = minimum + (diff // 2)
-    else:  # value is not None
-        if not isinstance(value, Real):
-            raise TypeError("expected a real number, got: %r" % value)
-        # Infer min/max from value
-        if value == 0:
+        diff = max - min
+        x = min + (diff / 2)
+        # Ensure that x has the same type as diff
+        if not isinstance(x, type(diff)):
+            x = min + (diff // 2)
+    else:  # x is not None
+        if not isinstance(x, Real):
+            raise TypeError("expected a real number, got: %r" % x)
+        # Infer min/max from x
+        if x == 0:
             # This gives (0, 1) of the correct type
-            vrange = (value, value + 1)
-        elif value > 0:
-            vrange = (-value, 3 * value)
+            vrange = (x, x + 1)
+        elif x > 0:
+            vrange = (-x, 3 * x)
         else:
-            vrange = (3 * value, -value)
-        if minimum is None:
-            minimum = vrange[0]
-        if maximum is None:
-            maximum = vrange[1]
+            vrange = (3 * x, -x)
+        if min is None:
+            min = vrange[0]
+        if max is None:
+            max = vrange[1]
     if step is not None:
-        # ensure value is on a step
-        tick = int((value - minimum) / step)
-        value = minimum + tick * step
-    if not minimum <= value <= maximum:
+        # ensure x is on a step
+        tick = int((x - min) / step)
+        x = min + tick * step
+    if not min <= x <= max:
         raise ValueError(
-            "value must be between min and max (min={0}, value={1}, max={2})".format(
-                minimum, value, maximum
+            "x must be between min and max (min={0}, x={1}, max={2})".format(
+                min, x, max
             )
         )
-    return minimum, maximum, value
+    return min, max, x

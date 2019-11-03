@@ -1,13 +1,14 @@
-from dasher import Dasher
 import dash_html_components as html
+
+from dasher import Dasher
 
 app = Dasher(__name__, title="My first dashboard")
 
 
 @app.callback(
-    "My first callback",
-    "Try out the widgets!",
-    _labels = ["Greeting", "Place"],
+    _name="My first callback",
+    _desc="Try out the widgets!",
+    _labels=["Greeting", "Place"],
     text="Hello",
     place=["World", "Universe"],
 )
