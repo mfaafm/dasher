@@ -32,7 +32,7 @@ import dash_bootstrap_components as dbc
 from collections.abc import Iterable, Mapping
 from numbers import Real, Integral
 from collections import OrderedDict
-from dasher.base import BaseWidget, WidgetPassthroughMixin
+from dasher.base import BaseWidget, WidgetPassthroughMixin, CustomWidget
 from .min_max_value import get_min_max_value
 
 
@@ -196,7 +196,7 @@ class NumberWidget(TupleWidget):
 
 WIDGET_SPEC = OrderedDict(
     [
-        (Component, PassthroughWidget),
+        ((Component, CustomWidget), PassthroughWidget),
         (bool, BoolWidget),
         (str, StringWidget),
         ((Real, Integral), NumberWidget),

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import OrderedDict
+from dash.development.base_component import Component
 
 
 class BaseWidget(ABC):
@@ -71,8 +72,34 @@ class BaseWidget(ABC):
         pass
 
 
+class CustomWidget(object):
+    """ Wrapper class for custom widgets.
+    Used to fully customize a widget including the dependency attribute.
+
+    Parameters
+    ----------
+    component: dash.development.base_component.Component
+        Custom interactive dash component.
+    dependency: str, optional
+        The attribute used for the ``dash.dependencies.Input`` dependency.
+        Default: "value".
+    """
+    def __init__(self, component, dependency="value"):
+        if not isinstance(component, Component):
+            msg = "component must be a dash.development.base_component.Component"
+            raise ValueError(msg)
+        self.component = component
+        self.dependency = dependency
+
+
 class WidgetPassthroughMixin(BaseWidget, ABC):
-    """ Passthrough mixin to support custom dash components. """
+    """ Passthrough mixin to support custom dash components and custom widgets. """
+
+    def __init__(self, name, x, label=None):
+        if isinstance(x, CustomWidget):
+            super().__init__(name, x.component, label, x.dependency)
+        else:
+            super().__init__(name, x, label)
 
     @property
     def component(self):

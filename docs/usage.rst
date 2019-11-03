@@ -84,7 +84,7 @@ components, see ``examples/widget_demo.py``.
 
 Multiple callbacks
 ==================
-``dasher`` supports multiple callbacks and will autmatically create tabs to separate the
+dasher supports multiple callbacks and will autmatically create tabs to separate the
 content of the callbacks.
 An example dashboard with two callbacks can be found in ``examples/plot_demo.py``
 and it looks like this:
@@ -95,7 +95,16 @@ and it looks like this:
 
 Customizations
 ==============
+dasher has many options for customizations, including:
 
+* support for native dash components and custom widgets
+* removal of the credits link in the navbar
+* layout options on a global level (number of columns to display the widgets in)
+* layout options on a callback level
+* customization of the widget specification
+
+Refer to the `reference` for details or have a look at the customization example in
+``examples/customization_example.py``, which shows some of the possible customizations.
 
 Dasher API
 ==========
