@@ -25,6 +25,8 @@ matrix:
 {%- if env.startswith('pypy3') %}{{ '' }}
         - TOXPYTHON=pypy3
       python: 'pypy3'
+{%- elif env.startswith('pypy') %}{{ '' }}
+      python: 'pypy'
 {%- else %}{{ '' }}
       python: '{{ '{0[2]}.{0[3]}'.format(env) }}'
 {%- endif %}
