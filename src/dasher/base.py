@@ -1,5 +1,7 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from collections import OrderedDict
+
 from dash.development.base_component import Component
 
 

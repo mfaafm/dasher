@@ -1,5 +1,6 @@
-from dasher import Dasher
 import dash_html_components as html
+
+from dasher import Dasher
 
 app = Dasher(__name__, title="My first dashboard")
 

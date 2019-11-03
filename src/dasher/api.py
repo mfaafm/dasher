@@ -1,6 +1,10 @@
-from collections.abc import Sequence, Mapping
-from dash.dependencies import Input, Output
-from dasher.base import BaseWidget, BaseLayout
+from collections.abc import Mapping
+from collections.abc import Sequence
+
+from dash.dependencies import Input
+from dash.dependencies import Output
+
+from dasher.base import BaseLayout
 
 
 class Api(object):

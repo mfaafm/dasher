@@ -26,13 +26,20 @@ interactive widgets:
 """
 
 from abc import ABC
-from dash.development.base_component import Component
-import dash_core_components as dcc
-import dash_bootstrap_components as dbc
-from collections.abc import Iterable, Mapping
-from numbers import Real, Integral
 from collections import OrderedDict
-from dasher.base import BaseWidget, WidgetPassthroughMixin, CustomWidget
+from collections.abc import Iterable
+from collections.abc import Mapping
+from numbers import Integral
+from numbers import Real
+
+import dash_bootstrap_components as dbc
+import dash_core_components as dcc
+from dash.development.base_component import Component
+
+from dasher.base import BaseWidget
+from dasher.base import CustomWidget
+from dasher.base import WidgetPassthroughMixin
+
 from .min_max_value import get_min_max_value
 
 

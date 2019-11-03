@@ -1,6 +1,8 @@
-from dasher import Dasher, CustomWidget
-import dash_html_components as html
 import dash_bootstrap_components as dbc
+import dash_html_components as html
+
+from dasher import CustomWidget
+from dasher import Dasher
 
 # use three columns for the widgets, turn credits off
 app = Dasher(

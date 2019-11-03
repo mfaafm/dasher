@@ -1,7 +1,9 @@
-import dash
 from copy import deepcopy
-from .base import Callback
+
+import dash
+
 from .api import Api
+from .base import Callback
 
 
 class Dasher(object):

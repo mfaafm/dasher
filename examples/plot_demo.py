@@ -1,6 +1,7 @@
-from dasher import Dasher
 import dash_core_components as dcc
 import plotly.graph_objs as go
+
+from dasher import Dasher
 
 app = Dasher(__name__, title="Interactive plotting demo")
 
