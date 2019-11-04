@@ -16,10 +16,6 @@ matrix:
     - env:
         - TOXENV=py36
       python: '3.6'
-    - os: osx
-      language: generic
-      env:
-        - TOXENV=py37
     - env:
         - TOXENV=py37
       python: '3.7'
@@ -30,12 +26,6 @@ before_install:
   - python --version
   - uname -a
   - lsb_release -a || true
-  - |
-    if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-      [[ $TOXENV =~ py3 ]] && brew upgrade python
-      [[ $TOXENV =~ py2 ]] && brew install python@2
-      export PATH="/usr/local/opt/python/libexec/bin:${PATH}"
-    fi
 install:
   - python -mpip install --progress-bar=off tox -rci/requirements.txt
   - virtualenv --version
