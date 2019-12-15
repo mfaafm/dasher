@@ -261,19 +261,19 @@ class Api(object):
 
     @staticmethod
     def generate_callback_id(name):
-        """ Get callback id from `name`.
-        It is a lowercase version of name, where all non-alphanumeric characters are
+        """ Get callback id from ``name``.
+        It is a lowercase version of ``name``, where all non-alphanumeric characters are
         replaced by underscores.
 
         Parameters
         ----------
         name: str
-            The callback `name` to generate an id from.
+            The callback ``name`` to generate an id from.
 
         Returns
         -------
         str
-            Lowercase version of `name`, where all non-alphanumeric characters are
+            Lowercase version of ``name``, where all non-alphanumeric characters are
             replaced by underscores.
         """
         return generate_callback_id(name)
