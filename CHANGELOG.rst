@@ -3,8 +3,8 @@ Changelog
 
 0.3.0 (2019-12-15)
 ------------------
-* Generate `id` property from `name` for every callback. The `id` is now used to
-  identify the callback, while `name` is used in the layout for displaying.
+* Generate ``id`` property from ``name`` for every callback. The ``id`` is now used to
+  identify the callback, while ``name`` is used in the layout for displaying.
 
 0.2.0 (2019-11-03)
 ------------------
