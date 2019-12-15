@@ -24,7 +24,7 @@ def read(*names, **kwargs):
 
 setup(
     name="dasher",
-    version="0.2.0",
+    version="version='0.3.0'",
     license="MIT",
     description="Generate interactive plotly dash dashboards in an instant",
     long_description="%s\n%s"
