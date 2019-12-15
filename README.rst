@@ -69,7 +69,9 @@ You can also install the in-development version with::
 
 First steps
 ===========
-Creating a simple, interactive dashboard with a nice layout is as easy as this::
+Creating a simple, interactive dashboard with a nice layout is as easy as this:
+
+.. code:: python
 
     from dasher import Dasher
     import dash_html_components as html
@@ -91,8 +93,6 @@ Creating a simple, interactive dashboard with a nice layout is as easy as this::
 
     if __name__ == "__main__":
         app.run_server(debug=True)
-
-
 
 
 The resulting dashboard looks like this:
