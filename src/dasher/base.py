@@ -7,20 +7,20 @@ from dash.development.base_component import Component
 
 
 def generate_callback_id(name):
-    """ Get callback id from `name`.
-    It is a lowercase version of name, where all non-alphanumeric characters are
+    """ Get callback id from ``name``.
+    It is a lowercase version of ``name``, where all non-alphanumeric characters are
     replaced by underscores.
 
     Parameters
     ----------
     name: str
-        The callback `name` to generate an id from.
+        The callback ``name`` to generate an id from.
 
     Returns
     -------
     str
-        Lowercase version of `name`, where all non-alphanumeric characters are replaced
-        by underscores.
+        Lowercase version of ``name``, where all non-alphanumeric characters are
+        replaced by underscores.
     """
     return re.sub(r"\W+", "_", name).lower()
 
