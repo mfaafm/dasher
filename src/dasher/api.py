@@ -272,7 +272,7 @@ class Api(object):
         Returns
         -------
         str
-            Lowercase version of `name`, where all non-alphanumeric characters are replaced
-            by underscores.
+            Lowercase version of `name`, where all non-alphanumeric characters are
+            replaced by underscores.
         """
         return generate_callback_id(name)
