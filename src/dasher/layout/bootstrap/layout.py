@@ -138,10 +138,10 @@ class BootstrapLayout(BaseLayout):
 
         cols = [dbc.Col(w.layout) for w in callback.widgets]
         rows = [dbc.Row(row) for row in self._chunks(cols, widget_cols)]
-        widgets_form = dbc.Form(rows, id=f"{self.widgets_base}-{callback.name}")
+        widgets_form = dbc.Form(rows, id=f"{self.widgets_base}-{callback.id}")
 
         output = dbc.Container(
-            id=f"{self.output_base}-{callback.name}", style={"marginTop": "1em"}
+            id=f"{self.output_base}-{callback.id}", style={"marginTop": "1em"}
         )
 
         card_header = dbc.CardHeader(callback.name)
@@ -163,7 +163,7 @@ class BootstrapLayout(BaseLayout):
         **kwargs:
            Keyword arguments to override default layout settings for a callback.
         """
-        tab = dbc.Tab(label=callback.name, tab_id=callback.name)
+        tab = dbc.Tab(label=callback.name, tab_id=callback.id)
 
         if len(self.callbacks) == 0:
             self.tabs = dbc.Tabs(
@@ -185,20 +185,20 @@ class BootstrapLayout(BaseLayout):
 
         content = self.render_card(callback, **kwargs)
 
-        self.callbacks[callback.name] = callback
+        self.callbacks[callback.id] = callback
         callback.layout = content
 
-    def render_callback(self, name):
+    def render_callback(self, id):
         """ Callback method to switch between tabs.
 
         Parameters
         ----------
-        name: str
-            Name of the callback to render.
+        id: str
+            ID of the callback to render.
 
         Returns
         -------
         dash.development.base_component.Component
             Layout of the callback.
         """
-        return self.callbacks[name].layout
+        return self.callbacks[id].layout

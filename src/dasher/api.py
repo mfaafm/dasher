@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from dash.dependencies import Input
 from dash.dependencies import Output
 
-from dasher.base import BaseLayout
+from dasher.base import BaseLayout, generate_callback_id
 
 
 class Api(object):
@@ -252,8 +252,27 @@ class Api(object):
         Parameters
         ----------
         app: dash.Dash
-            The dash app
+            The dash app.
         callback: DasherCallback
-            The dasher callback to register
+            The dasher callback to register.
         """
         return app.callback(callback.outputs, callback.inputs)(callback.f)
+
+    @staticmethod
+    def generate_callback_id(name):
+        """ Get callback id from `name`.
+        It is a lowercase version of name, where all non-alphanumeric characters are
+        replaced by underscores.
+
+        Parameters
+        ----------
+        name: str
+            The callback `name` to generate an id from.
+
+        Returns
+        -------
+        str
+            Lowercase version of `name`, where all non-alphanumeric characters are replaced
+            by underscores.
+        """
+        return generate_callback_id(name)
