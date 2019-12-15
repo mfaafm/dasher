@@ -1,8 +1,28 @@
+import re
 from abc import ABC
 from abc import abstractmethod
 from collections import OrderedDict
 
 from dash.development.base_component import Component
+
+
+def generate_callback_id(name):
+    """ Get callback id from `name`.
+    It is a lowercase version of name, where all non-alphanumeric characters are
+    replaced by underscores.
+
+    Parameters
+    ----------
+    name: str
+        The callback `name` to generate an id from.
+
+    Returns
+    -------
+    str
+        Lowercase version of `name`, where all non-alphanumeric characters are replaced
+        by underscores.
+    """
+    return re.sub(r"\W+", "_", name).lower()
 
 
 class BaseWidget(ABC):
@@ -86,6 +106,7 @@ class CustomWidget(object):
         The attribute used for the ``dash.dependencies.Input`` dependency.
         Default: "value".
     """
+
     def __init__(self, component, dependency="value"):
         if not isinstance(component, Component):
             msg = "component must be a dash.development.base_component.Component"
@@ -230,6 +251,7 @@ class Callback(object):
     def __init__(
         self, name, description, f, kw, labels, widgets, outputs, inputs, layout_kw
     ):
+        self.id = generate_callback_id(name)
         self.name = name
         self.description = description
         self.f = f

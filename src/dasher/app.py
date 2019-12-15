@@ -125,9 +125,11 @@ class Dasher(object):
         def function_wrapper(f):
             layout = _layout_kw if _layout_kw is not None else {}
 
-            widgets = self.api.generate_widgets(kwargs, _labels, _name)
+            callback_id = self.api.generate_callback_id(_name)
+
+            widgets = self.api.generate_widgets(kwargs, _labels, callback_id)
             outputs, inputs = self.api.generate_dependencies(
-                widgets, f"{self.api.layout.output_base}-{_name}"
+                widgets, f"{self.api.layout.output_base}-{callback_id}"
             )
 
             callback = Callback(
@@ -141,7 +143,7 @@ class Dasher(object):
                 inputs=inputs,
                 layout_kw=_layout_kw,
             )
-            self.callbacks[callback.name] = callback
+            self.callbacks[callback.id] = callback
 
             self.api.layout.add_callback(callback, self.app, **layout)
             return self.api.register_callback(self.app, callback)

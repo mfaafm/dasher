@@ -46,9 +46,9 @@ Overview
     :alt: Supported implementations
     :target: https://pypi.org/project/dasher
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/mfaafm/dasher/v0.2.0.svg
+.. |commits-since| image:: https://img.shields.io/github/commits-since/mfaafm/dasher/v0.3.0.svg
     :alt: Commits since latest release
-    :target: https://github.com/mfaafm/dasher/compare/v0.2.0...master
+    :target: https://github.com/mfaafm/dasher/compare/v0.3.0...master
 
 
 
@@ -97,7 +97,7 @@ Creating a simple, interactive dashboard with a nice layout is as easy as this::
 
 The resulting dashboard looks like this:
 
-.. image:: https://raw.githubusercontent.com/mfaafm/dasher/v0.2.0/docs/images/hello_world.gif
+.. image:: https://raw.githubusercontent.com/mfaafm/dasher/v0.3.0/docs/images/hello_world.gif
     :alt: hello world example
     :align: center
 
@@ -112,7 +112,7 @@ License
 
 Free software, `MIT License`_
 
-.. _`MIT License`: https://raw.githubusercontent.com/mfaafm/dasher/v0.2.0/LICENSE
+.. _`MIT License`: https://raw.githubusercontent.com/mfaafm/dasher/v0.3.0/LICENSE
 
 Development
 ===========
