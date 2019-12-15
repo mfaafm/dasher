@@ -53,6 +53,8 @@ To set up `dasher` for local development:
 
     tox
 
+   Further information on developing, can be found in the `cookiecutter template <https://github.com/ionelmc/cookiecutter-pylibrary>`_
+   that was used to set up this project.
 5. Commit your changes and push your branch to GitHub::
 
     git add .

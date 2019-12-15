@@ -4,7 +4,8 @@ from collections.abc import Sequence
 from dash.dependencies import Input
 from dash.dependencies import Output
 
-from dasher.base import BaseLayout, generate_callback_id
+from dasher.base import BaseLayout
+from dasher.base import generate_callback_id
 
 
 class Api(object):
