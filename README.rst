@@ -97,7 +97,7 @@ Creating a simple, interactive dashboard with a nice layout is as easy as this::
 
 The resulting dashboard looks like this:
 
-.. image:: https://raw.githubusercontent.com/mfaafm/dasher/v0.2.0/docs/images/hello_world.gif
+.. image:: https://raw.githubusercontent.com/mfaafm/dasher/v0.3.0/docs/images/hello_world.gif
     :alt: hello world example
     :align: center
 
@@ -112,7 +112,7 @@ License
 
 Free software, `MIT License`_
 
-.. _`MIT License`: https://raw.githubusercontent.com/mfaafm/dasher/v0.2.0/LICENSE
+.. _`MIT License`: https://raw.githubusercontent.com/mfaafm/dasher/v0.3.0/LICENSE
 
 Development
 ===========
