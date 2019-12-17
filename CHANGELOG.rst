@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.1 (2019-12-17)
+------------------
+* Update and fix documentation.
+* Fix documentation build using ``.readthedocs.yml``.
+
 0.3.0 (2019-12-15)
 ------------------
 * Generate ``id`` property from ``name`` for every callback. The ``id`` is now used to
